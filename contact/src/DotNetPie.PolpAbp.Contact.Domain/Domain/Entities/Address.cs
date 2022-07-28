@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
-namespace PolpAbp.Directory.Domain.Entities
+namespace DotNetPie.PolpAbp.Contact.Domain.Entities
 {
-    public class Address : FullAuditedAggregateRoot<Guid>
+    public class Address : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {
         public Guid CountryId { get; set; }
         public Guid? StateProvinceId { get; set; }
@@ -27,7 +28,7 @@ namespace PolpAbp.Directory.Domain.Entities
 
         public string ZipCode { get; set; }
 
-        public Country Country { get; set; }
+        public Guid? TenantId { get; set; }
     }
 }
 

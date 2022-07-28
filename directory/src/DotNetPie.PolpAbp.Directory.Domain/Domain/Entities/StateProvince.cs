@@ -2,7 +2,7 @@
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Auditing;
 
-namespace PolpAbp.Directory.Domain.Entities
+namespace DotNetPie.PolpAbp.Directory.Domain.Entities
 {
     public class StateProvince : Entity<Guid>, IHasCreationTime
     {
