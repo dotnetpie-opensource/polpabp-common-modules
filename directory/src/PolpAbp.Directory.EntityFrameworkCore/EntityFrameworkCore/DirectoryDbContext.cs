@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PolpAbp.Directory.Domain.Entities;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -16,6 +17,14 @@ public class DirectoryDbContext : AbpDbContext<DirectoryDbContext>, IDirectoryDb
     {
 
     }
+
+    public DbSet<Country> Countries { get; set; }
+
+    public DbSet<StateProvince> StateProvinces { get; set; }
+
+    public DbSet<Address> Addresses { get; set; }
+
+    public DbSet<Contact> Contacts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
