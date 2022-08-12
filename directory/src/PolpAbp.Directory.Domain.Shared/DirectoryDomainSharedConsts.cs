@@ -1,5 +1,5 @@
 ﻿using System;
-namespace DotNetPie.PolpAbp.Directory
+namespace PolpAbp.Directory
 {
     public static class DirectoryDomainSharedConsts
     {

@@ -1,4 +1,4 @@
-﻿namespace DotNetPie.PolpAbp.Directory.Settings;
+﻿namespace PolpAbp.Directory.Settings;
 
 public static class DirectorySettings
 {

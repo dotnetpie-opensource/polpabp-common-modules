@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Settings;
 
-namespace DotNetPie.PolpAbp.Directory.Settings;
+namespace PolpAbp.Directory.Settings;
 
 public class DirectorySettingDefinitionProvider : SettingDefinitionProvider
 {

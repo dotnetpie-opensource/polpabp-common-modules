@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 
-namespace DotNetPie.PolpAbp.Directory.Domain.Entities
+namespace PolpAbp.Directory.Domain.Entities
 {
     public class Country : AggregateRoot<Guid>, IHasCreationTime
     {

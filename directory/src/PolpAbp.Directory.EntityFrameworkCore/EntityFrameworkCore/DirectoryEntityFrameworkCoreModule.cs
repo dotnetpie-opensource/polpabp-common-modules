@@ -2,7 +2,7 @@
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
-namespace DotNetPie.PolpAbp.Directory.EntityFrameworkCore;
+namespace PolpAbp.Directory.EntityFrameworkCore;
 
 [DependsOn(
     typeof(DirectoryDomainModule),

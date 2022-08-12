@@ -1,12 +1,12 @@
 ﻿using Volo.Abp.Modularity;
 using Volo.Abp.Localization;
-using DotNetPie.PolpAbp.Directory.Localization;
+using PolpAbp.Directory.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
 using Volo.Abp.Validation;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 
-namespace DotNetPie.PolpAbp.Directory;
+namespace PolpAbp.Directory;
 
 [DependsOn(
     typeof(AbpValidationModule)

@@ -1,9 +1,9 @@
-﻿using DotNetPie.PolpAbp.Directory.Domain.Entities;
+﻿using PolpAbp.Directory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
-namespace DotNetPie.PolpAbp.Directory.EntityFrameworkCore;
+namespace PolpAbp.Directory.EntityFrameworkCore;
 
 public static class DirectoryDbContextModelCreatingExtensions
 {

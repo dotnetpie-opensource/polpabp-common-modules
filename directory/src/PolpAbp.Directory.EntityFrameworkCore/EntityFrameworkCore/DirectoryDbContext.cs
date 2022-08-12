@@ -1,10 +1,10 @@
-﻿using DotNetPie.PolpAbp.Directory.Domain.Entities;
+﻿using PolpAbp.Directory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.MultiTenancy;
 
-namespace DotNetPie.PolpAbp.Directory.EntityFrameworkCore;
+namespace PolpAbp.Directory.EntityFrameworkCore;
 
 [IgnoreMultiTenancy]
 [ConnectionStringName(DirectoryDbProperties.ConnectionStringName)]
