@@ -1,10 +1,7 @@
 ﻿using System;
-using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.MultiTenancy;
-
-namespace PolpAbp.Contact.Domain.Entities
+namespace PolpAbp.Contact.Dtos
 {
-    public class ContactCard : FullAuditedAggregateRoot<Guid>, IMultiTenant
+    public class ContactCardInputDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -13,12 +10,6 @@ namespace PolpAbp.Contact.Domain.Entities
         public string PhoneNumber { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool PhoneConfirmed { get; set; }
-
-        public Guid? TenantId { get; set; }
-
-        public ContactCard(Guid id) : base(id)
-        {
-            CreationTime = DateTime.UtcNow;
-        }
     }
 }
+

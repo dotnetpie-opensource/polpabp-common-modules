@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.MultiTenancy;
+using System.ComponentModel.DataAnnotations;
+using Volo.Abp.Application.Dtos;
 
-namespace PolpAbp.Contact.Domain.Entities
+namespace PolpAbp.Contact.Dtos
 {
-    public class Address : FullAuditedAggregateRoot<Guid>, IMultiTenant
+    public class AddressInputDto
     {
         public Guid CountryId { get; set; }
         public Guid? StateProvinceId { get; set; }
@@ -16,23 +15,21 @@ namespace PolpAbp.Contact.Domain.Entities
         /// </summary>
         public string StateProvinceName { get; set; }
 
+        [Required]
         public string City { get; set; }
 
         public string County { get; set; }
 
         public int StreeNo { get; set; }
 
+        [Required]
         public string Address1 { get; set; }
 
         public string Address2 { get; set; }
 
+        [Required]
         public string ZipCode { get; set; }
 
-        public Guid? TenantId { get; set; }
-
-        public Address(Guid id) : base(id) {
-            CreationTime = DateTime.UtcNow;
-        }
     }
 }
 
