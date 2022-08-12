@@ -1,9 +1,9 @@
-﻿using DotNetPie.PolpAbp.Contact.Domain.Entities;
+﻿using PolpAbp.Contact.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace DotNetPie.PolpAbp.Contact.EntityFrameworkCore;
+namespace PolpAbp.Contact.EntityFrameworkCore;
 
 [ConnectionStringName(ContactDbProperties.ConnectionStringName)]
 public class ContactDbContext : AbpDbContext<ContactDbContext>, IContactDbContext

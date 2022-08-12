@@ -2,7 +2,7 @@
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace DotNetPie.PolpAbp.Contact.Domain.Entities
+namespace PolpAbp.Contact.Domain.Entities
 {
     public class ContactCard : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {

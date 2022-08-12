@@ -1,12 +1,12 @@
 ﻿using Volo.Abp.Modularity;
 using Volo.Abp.Localization;
-using DotNetPie.PolpAbp.Contact.Localization;
+using PolpAbp.Contact.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
 using Volo.Abp.Validation;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 
-namespace DotNetPie.PolpAbp.Contact;
+namespace PolpAbp.Contact;
 
 [DependsOn(
     typeof(AbpValidationModule)

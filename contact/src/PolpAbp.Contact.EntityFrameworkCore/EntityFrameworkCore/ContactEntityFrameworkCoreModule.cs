@@ -2,7 +2,7 @@
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
-namespace DotNetPie.PolpAbp.Contact.EntityFrameworkCore;
+namespace PolpAbp.Contact.EntityFrameworkCore;
 
 [DependsOn(
     typeof(ContactDomainModule),

@@ -1,7 +1,7 @@
 ﻿using Volo.Abp.Domain;
 using Volo.Abp.Modularity;
 
-namespace DotNetPie.PolpAbp.Contact;
+namespace PolpAbp.Contact;
 
 [DependsOn(
     typeof(AbpDddDomainModule),

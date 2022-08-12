@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Settings;
 
-namespace DotNetPie.PolpAbp.Contact.Settings;
+namespace PolpAbp.Contact.Settings;
 
 public class ContactSettingDefinitionProvider : SettingDefinitionProvider
 {

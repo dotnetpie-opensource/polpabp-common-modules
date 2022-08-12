@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Localization;
 
-namespace DotNetPie.PolpAbp.Contact.Localization;
+namespace PolpAbp.Contact.Localization;
 
 [LocalizationResourceName("Contact")]
 public class ContactResource

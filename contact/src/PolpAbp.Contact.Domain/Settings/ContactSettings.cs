@@ -1,4 +1,4 @@
-﻿namespace DotNetPie.PolpAbp.Contact.Settings;
+﻿namespace PolpAbp.Contact.Settings;
 
 public static class ContactSettings
 {

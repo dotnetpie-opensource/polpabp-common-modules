@@ -1,9 +1,9 @@
-﻿using DotNetPie.PolpAbp.Contact.Domain.Entities;
+﻿using PolpAbp.Contact.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
-namespace DotNetPie.PolpAbp.Contact.EntityFrameworkCore;
+namespace PolpAbp.Contact.EntityFrameworkCore;
 
 public static class ContactDbContextModelCreatingExtensions
 {

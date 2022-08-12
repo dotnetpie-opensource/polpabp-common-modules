@@ -1,4 +1,4 @@
-﻿namespace DotNetPie.PolpAbp.Contact;
+﻿namespace PolpAbp.Contact;
 
 public static class ContactErrorCodes
 {
