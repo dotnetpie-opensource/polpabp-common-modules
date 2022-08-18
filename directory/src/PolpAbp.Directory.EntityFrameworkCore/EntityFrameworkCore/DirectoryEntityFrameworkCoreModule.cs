@@ -14,9 +14,8 @@ public class DirectoryEntityFrameworkCoreModule : AbpModule
     {
         context.Services.AddAbpDbContext<DirectoryDbContext>(options =>
         {
-                /* Add custom repositories here. Example:
-                 * options.AddRepository<Question, EfCoreQuestionRepository>();
-                 */
+            // Only include the aggregated ones.
+            options.AddDefaultRepositories(includeAllEntities: false);
         });
     }
 }
