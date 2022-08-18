@@ -30,6 +30,10 @@ namespace PolpAbp.Contact.Domain.Entities
 
         public Guid? TenantId { get; set; }
 
+        public Address() : base()
+        {
+        }
+
         public Address(Guid id) : base(id) {
             CreationTime = DateTime.UtcNow;
         }

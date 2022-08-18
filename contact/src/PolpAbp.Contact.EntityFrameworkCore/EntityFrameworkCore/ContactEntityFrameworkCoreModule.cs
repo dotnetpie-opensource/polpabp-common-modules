@@ -14,9 +14,10 @@ public class ContactEntityFrameworkCoreModule : AbpModule
     {
         context.Services.AddAbpDbContext<ContactDbContext>(options =>
         {
-                /* Add custom repositories here. Example:
-                 * options.AddRepository<Question, EfCoreQuestionRepository>();
-                 */
+            /* Add custom repositories here. Example:
+             * options.AddRepository<Question, EfCoreQuestionRepository>();
+             */
+            options.AddDefaultRepositories(includeAllEntities: true);
         });
     }
 }
