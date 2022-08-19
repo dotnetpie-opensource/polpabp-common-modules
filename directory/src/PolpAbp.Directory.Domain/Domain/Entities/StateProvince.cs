@@ -13,6 +13,16 @@ namespace PolpAbp.Directory.Domain.Entities
         public string Name { get; set; }
 
         public string Abbreviation { get; set; }
+
+
+        public StateProvince() : base()
+        {
+        }
+
+        public StateProvince(Guid id) : base(id)
+        {
+            CreationTime = DateTime.UtcNow;
+        }
     }
 }
 

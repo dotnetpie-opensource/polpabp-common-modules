@@ -18,6 +18,16 @@ namespace PolpAbp.Directory.Domain.Entities
         public int NumbericIsoCode { get; set; }
 
         public List<StateProvince> StateProvinces { get; set; }
+
+
+        public Country() : base()
+        {
+        }
+
+        public Country(Guid id) : base(id)
+        {
+            CreationTime = DateTime.UtcNow;
+        }
     }
 }
 
