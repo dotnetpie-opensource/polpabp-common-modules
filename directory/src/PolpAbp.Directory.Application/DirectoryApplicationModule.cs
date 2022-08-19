@@ -2,14 +2,16 @@
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
+using PolpAbp.Framework;
 
 namespace PolpAbp.Directory;
 
 [DependsOn(
+    typeof(AbpAutoMapperModule),
+    typeof(AbpDddApplicationModule),
     typeof(DirectoryDomainModule),
     typeof(DirectoryApplicationContractsModule),
-    typeof(AbpDddApplicationModule),
-    typeof(AbpAutoMapperModule)
+    typeof(PolpAbpFrameworkAbpExtensionsModule)
     )]
 public class DirectoryApplicationModule : AbpModule
 {

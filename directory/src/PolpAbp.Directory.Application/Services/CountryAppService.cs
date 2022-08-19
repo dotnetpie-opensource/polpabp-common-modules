@@ -1,8 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using PolpAbp.Directory.Domain.Entities;
+﻿using PolpAbp.Directory.Domain.Entities;
 using PolpAbp.Directory.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
 namespace PolpAbp.Directory.Services
@@ -41,6 +42,45 @@ namespace PolpAbp.Directory.Services
             await _countryRepo.UpdateAsync(target);
         }
 
+        public async Task<IEnumerable<CountryOutputDto>> ListAsyc()
+        {
+            var a = await _countryRepo.ToListAsync();
+            return a.Select(x => ObjectMapper.Map<Country, CountryOutputDto>(x));
+        }
+
+        // Follow DDD, we have to access country first. That's why we need the countryId.
+        public async Task<IEnumerable<StateProvinceOutputDto>> ListStateProvincesByCountryAsync(Guid countryId)
+        {
+            var country = await _countryRepo.GetAsync(a => a.Id == countryId);
+            var s = country.StateProvinces;
+
+            return s.Select(x => ObjectMapper.Map<StateProvince, StateProvinceOutputDto>(x));   
+        }
+
+        // Follow DDD, we have to access country first. That's why we need the countryId.
+        public async Task AddStateProvinceAsync(Guid countryId, StateProvinceInputDto input)
+        {
+            var country = await _countryRepo.GetAsync(a => a.Id == countryId);
+
+            var item = new StateProvince(GuidGenerator.Create());
+            ObjectMapper.Map<StateProvinceInputDto, StateProvince>(input, item);
+            country.StateProvinces.Add(item);
+
+            await _countryRepo.UpdateAsync(country);
+        }
+
+        // Follow DDD, we have to access country first. That's why we need the countryId.
+        public async Task RemoveStateProvinceAsync(Guid countryId, Guid stateProvinceId)
+        {
+            var country = await _countryRepo.GetAsync(a => a.Id == countryId);
+
+            var item = country.StateProvinces.Find(a => a.Id == stateProvinceId);
+            if (item != null)
+            {
+                country.StateProvinces.Remove(item);
+                await _countryRepo.UpdateAsync(country);
+            }
+        }
     }
 }
 

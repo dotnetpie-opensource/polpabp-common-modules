@@ -14,7 +14,7 @@ namespace PolpAbp.Contact.Services
         }
 
         [Fact]
-        public async Task CreateTestAsync()
+        public async Task CreateAsync()
         {
             var id = new Guid();
             var result = await _appService.CreateAsync(new Dtos.AddressInputDto
