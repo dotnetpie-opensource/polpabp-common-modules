@@ -2,14 +2,16 @@
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
+using PolpAbp.Framework;
 
 namespace PolpAbp.Contact;
 
 [DependsOn(
+    typeof(AbpDddApplicationModule),
+    typeof(AbpAutoMapperModule),
     typeof(ContactDomainModule),
     typeof(ContactApplicationContractsModule),
-    typeof(AbpDddApplicationModule),
-    typeof(AbpAutoMapperModule)
+    typeof(PolpAbpFrameworkAbpExtensionsModule)
     )]
 public class ContactApplicationModule : AbpModule
 {
