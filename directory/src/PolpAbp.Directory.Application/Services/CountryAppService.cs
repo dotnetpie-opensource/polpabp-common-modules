@@ -1,4 +1,5 @@
 ﻿using PolpAbp.Directory.Domain.Entities;
+using PolpAbp.Directory.Domain.Repositories;
 using PolpAbp.Directory.Dtos;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace PolpAbp.Directory.Services
     public class CountryAppService : DirectoryAppService, ICountryAppService
     {
 
-        private readonly IRepository<Country> _countryRepo;
+        private readonly ICountryRepository _countryRepo;
 
-        public CountryAppService(IRepository<Country> countryRepo)
+        public CountryAppService(ICountryRepository countryRepo)
         {
             _countryRepo = countryRepo;
         }
@@ -28,12 +29,12 @@ namespace PolpAbp.Directory.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            await _countryRepo.DeleteAsync(a => a.Id == id);
+            await _countryRepo.DeleteAsync(id);
         }
 
         public async Task UpdateAsyc(Guid id, CountryInputDto input)
         {
-            var target = await _countryRepo.FindAsync(a => a.Id == id);
+            var target = await _countryRepo.FindAsync(id);
             if (target == null)
             {
                 throw new ArgumentException($"No record for {id}");
@@ -44,14 +45,14 @@ namespace PolpAbp.Directory.Services
 
         public async Task<IEnumerable<CountryOutputDto>> ListAsyc()
         {
-            var a = await _countryRepo.ToListAsync();
+            var a = await _countryRepo.GetListAsync();
             return a.Select(x => ObjectMapper.Map<Country, CountryOutputDto>(x));
         }
 
         // Follow DDD, we have to access country first. That's why we need the countryId.
         public async Task<IEnumerable<StateProvinceOutputDto>> ListStateProvincesByCountryAsync(Guid countryId)
         {
-            var country = await _countryRepo.GetAsync(a => a.Id == countryId);
+            var country = await _countryRepo.GetAsync(countryId);
             var s = country.StateProvinces;
 
             return s.Select(x => ObjectMapper.Map<StateProvince, StateProvinceOutputDto>(x));   
@@ -60,25 +61,23 @@ namespace PolpAbp.Directory.Services
         // Follow DDD, we have to access country first. That's why we need the countryId.
         public async Task AddStateProvinceAsync(Guid countryId, StateProvinceInputDto input)
         {
-            var country = await _countryRepo.GetAsync(a => a.Id == countryId);
+            var country = await _countryRepo.GetAsync(countryId);
 
             var item = new StateProvince(GuidGenerator.Create());
             ObjectMapper.Map<StateProvinceInputDto, StateProvince>(input, item);
-            country.StateProvinces.Add(item);
 
-            await _countryRepo.UpdateAsync(country);
+            await _countryRepo.AddStateProvinceAsync(country, item);
         }
 
         // Follow DDD, we have to access country first. That's why we need the countryId.
         public async Task RemoveStateProvinceAsync(Guid countryId, Guid stateProvinceId)
         {
-            var country = await _countryRepo.GetAsync(a => a.Id == countryId);
+            var country = await _countryRepo.GetAsync(countryId);
 
             var item = country.StateProvinces.Find(a => a.Id == stateProvinceId);
             if (item != null)
             {
-                country.StateProvinces.Remove(item);
-                await _countryRepo.UpdateAsync(country);
+                await _countryRepo.RemoveStateProvinceAsync(country, item);
             }
         }
     }

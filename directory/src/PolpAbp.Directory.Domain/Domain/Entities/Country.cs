@@ -22,11 +22,13 @@ namespace PolpAbp.Directory.Domain.Entities
 
         public Country() : base()
         {
+            StateProvinces = new List<StateProvince>();
         }
 
         public Country(Guid id) : base(id)
         {
             CreationTime = DateTime.UtcNow;
+            StateProvinces = new List<StateProvince>();
         }
     }
 }

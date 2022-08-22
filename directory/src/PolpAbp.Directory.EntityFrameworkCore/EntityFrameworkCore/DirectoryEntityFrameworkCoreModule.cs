@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
+using PolpAbp.Directory.Domain.Repositories;
+using PolpAbp.Directory.Domain.Entities;
 
 namespace PolpAbp.Directory.EntityFrameworkCore;
 
@@ -15,7 +17,8 @@ public class DirectoryEntityFrameworkCoreModule : AbpModule
         context.Services.AddAbpDbContext<DirectoryDbContext>(options =>
         {
             // Only include the aggregated ones.
-            options.AddDefaultRepositories(includeAllEntities: false);
+            // options.AddDefaultRepositories(includeAllEntities: false);
+            options.AddRepository<Country, EfCoreCountryRepository>();
         });
     }
 }
