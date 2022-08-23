@@ -66,7 +66,7 @@ namespace PolpAbp.Directory.Services
             var item = new StateProvince(GuidGenerator.Create());
             ObjectMapper.Map<StateProvinceInputDto, StateProvince>(input, item);
 
-            await _countryRepo.AddStateProvinceAsync(country, item);
+            await _countryRepo.AddStateProvincesAsync(country, new List<StateProvince> { item });
         }
 
         // Follow DDD, we have to access country first. That's why we need the countryId.
@@ -77,7 +77,7 @@ namespace PolpAbp.Directory.Services
             var item = country.StateProvinces.Find(a => a.Id == stateProvinceId);
             if (item != null)
             {
-                await _countryRepo.RemoveStateProvinceAsync(country, item);
+                await _countryRepo.RemoveStateProvincesAsync(country, new List<StateProvince> { item });
             }
         }
     }

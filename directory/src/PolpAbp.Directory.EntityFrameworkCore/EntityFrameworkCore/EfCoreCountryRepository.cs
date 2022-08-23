@@ -4,6 +4,7 @@ using PolpAbp.Directory.Domain.Entities;
 using PolpAbp.Directory.Domain.Repositories;
 using System.Threading.Tasks;
 using Volo.Abp.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace PolpAbp.Directory.EntityFrameworkCore
 {
@@ -16,16 +17,19 @@ namespace PolpAbp.Directory.EntityFrameworkCore
         {
         }
 
-        public async Task AddStateProvinceAsync(Country country, StateProvince stateProvince)
+        public async Task AddStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces)
         {
-            country.StateProvinces.Add(stateProvince);
+            country.StateProvinces.AddRange(stateProvinces);
             var context = await GetDbContextAsync();
             await context.SaveChangesAsync();
         }
 
-        public async Task RemoveStateProvinceAsync(Country country, StateProvince stateProvince)
+        public async Task RemoveStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces)
         {
-            country.StateProvinces.Remove(stateProvince);
+            foreach (var a in stateProvinces)
+            {
+                country.StateProvinces.Remove(a);
+            }
             var context = await GetDbContextAsync();
             await context.SaveChangesAsync();
         }
