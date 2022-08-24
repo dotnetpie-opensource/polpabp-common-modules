@@ -17,7 +17,7 @@ namespace PolpAbp.Directory.Domain.Entities
 
         public int NumbericIsoCode { get; set; }
 
-        public List<StateProvince> StateProvinces { get; set; }
+        public virtual List<StateProvince> StateProvinces { get; set; }
 
 
         public Country() : base()
