@@ -4,6 +4,7 @@ using PolpAbp.Contact.Dtos;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp;
+using System.Threading;
 
 namespace PolpAbp.Contact.Services
 {
@@ -17,9 +18,9 @@ namespace PolpAbp.Contact.Services
             _contactCardRepo = contactCardRepo;
         }
 
-        public async Task<ContactCardOutputDto> FindByIdAsync(Guid id)
+        public async Task<ContactCardOutputDto> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var source = await _contactCardRepo.FindAsync(a => a.Id == id);
+            var source = await _contactCardRepo.FindAsync(a => a.Id == id, cancellationToken: cancellationToken);
             if (source != null)
             {
                 return ObjectMapper.Map<ContactCard, ContactCardOutputDto>(source);
@@ -28,28 +29,28 @@ namespace PolpAbp.Contact.Services
             return null;
         }
 
-        public async Task<Guid> CreateAsync(ContactCardInputDto dto)
+        public async Task<Guid> CreateAsync(ContactCardInputDto dto, CancellationToken cancellationToken = default)
         {
             var target = new ContactCard(GuidGenerator.Create());
             ObjectMapper.Map<ContactCardInputDto, ContactCard>(dto, target);
-            var a = await _contactCardRepo.InsertAsync(target);
+            var a = await _contactCardRepo.InsertAsync(target, cancellationToken: cancellationToken);
             return a.Id;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            await _contactCardRepo.DeleteAsync(a => a.Id == id);
+            await _contactCardRepo.DeleteAsync(a => a.Id == id, cancellationToken: cancellationToken);
         }
 
-        public async Task UpdateAsyc(Guid id, ContactCardInputDto input)
+        public async Task UpdateAsyc(Guid id, ContactCardInputDto input, CancellationToken cancellationToken = default)
         {
-            var target = await _contactCardRepo.FindAsync(a => a.Id == id);
+            var target = await _contactCardRepo.FindAsync(a => a.Id == id, cancellationToken: cancellationToken);
             if (target == null)
             {
                 throw new ArgumentException($"No record for {id}");
             }
             ObjectMapper.Map<ContactCardInputDto, ContactCard>(input, target);
-            await _contactCardRepo.UpdateAsync(target);
+            await _contactCardRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }
     }
 

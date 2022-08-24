@@ -5,6 +5,7 @@ using PolpAbp.Directory.Domain.Repositories;
 using System.Threading.Tasks;
 using Volo.Abp.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PolpAbp.Directory.EntityFrameworkCore
 {
@@ -17,21 +18,26 @@ namespace PolpAbp.Directory.EntityFrameworkCore
         {
         }
 
-        public async Task AddStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces)
+        public async Task AddStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            country.StateProvinces.AddRange(stateProvinces);
             var context = await GetDbContextAsync();
-            await context.SaveChangesAsync();
+            country.StateProvinces.AddRange(stateProvinces);
+            if (autoSave) {
+                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
+            }
         }
 
-        public async Task RemoveStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces)
+        public async Task RemoveStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces, bool autoSave = false, CancellationToken cancellationToken = default)
         {
+            var context = await GetDbContextAsync();
             foreach (var a in stateProvinces)
             {
                 country.StateProvinces.Remove(a);
             }
-            var context = await GetDbContextAsync();
-            await context.SaveChangesAsync();
+            if (autoSave)
+            {
+                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
+            }
         }
     }
 }

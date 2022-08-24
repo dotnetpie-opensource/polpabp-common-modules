@@ -4,6 +4,7 @@ using Volo.Abp.Domain.Repositories;
 using PolpAbp.Contact.Domain.Entities;
 using System.Threading.Tasks;
 using PolpAbp.Contact.Dtos;
+using System.Threading;
 
 namespace PolpAbp.Contact.Services
 {
@@ -17,9 +18,9 @@ namespace PolpAbp.Contact.Services
             _addressRepo = addressRepo;
         }
 
-        public async Task<AddressOutputDto> FindByIdAsync(Guid id)
+        public async Task<AddressOutputDto> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var source = await _addressRepo.FindAsync(a => a.Id == id);
+            var source = await _addressRepo.FindAsync(a => a.Id == id, cancellationToken:cancellationToken);
             if (source != null)
             {
                 return ObjectMapper.Map<Address, AddressOutputDto>(source);
@@ -28,28 +29,28 @@ namespace PolpAbp.Contact.Services
             return null;
         }
 
-        public async Task<Guid> CreateAsync(AddressInputDto dto)
+        public async Task<Guid> CreateAsync(AddressInputDto dto, CancellationToken cancellationToken = default)
         {
             var target = new Address(GuidGenerator.Create());
             ObjectMapper.Map<AddressInputDto, Address>(dto, target);
-            var a = await _addressRepo.InsertAsync(target);
+            var a = await _addressRepo.InsertAsync(target, cancellationToken: cancellationToken);
             return a.Id;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            await _addressRepo.DeleteAsync(a => a.Id == id);
+            await _addressRepo.DeleteAsync(a => a.Id == id, cancellationToken:cancellationToken);
         }
 
-        public async Task UpdateAsyc(Guid id, AddressInputDto input)
+        public async Task UpdateAsyc(Guid id, AddressInputDto input, CancellationToken cancellationToken = default)
         {
-            var target = await _addressRepo.FindAsync(a => a.Id == id);
+            var target = await _addressRepo.FindAsync(a => a.Id == id, cancellationToken:cancellationToken);
             if (target == null)
             {
                 throw new ArgumentException($"No record for {id}");
             }
             ObjectMapper.Map<AddressInputDto, Address>(input, target);
-            await _addressRepo.UpdateAsync(target);
+            await _addressRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }
 
 
