@@ -14,4 +14,17 @@
 	<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="test.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

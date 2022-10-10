@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -33,5 +35,10 @@ public class InlineMediaApplicationTestModule : AbpModule
         public IFileProvider ContentRootFileProvider { get; set; }
         public string ContentRootPath { get; set; }
         public string EnvironmentName { get; set; }
+
+        public WebHost()
+        {
+            WebRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
     }
 }

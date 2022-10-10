@@ -43,14 +43,14 @@ namespace PolpAbp.InlineMedia.Services
             if (targetSize == 0)
             {
                 thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
-                    : $"{picture.Id:0000000}.{lastPart}";
+                    ? $"{picture.Id}_{seoFileName}.{lastPart}"
+                    : $"{picture.Id}.{lastPart}";
             }
             else
             {
                 thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
-                    : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
+                    ? $"{picture.Id}_{seoFileName}_{targetSize}.{lastPart}"
+                    : $"{picture.Id}_{targetSize}.{lastPart}";
             }
             var thumbFilePath = GetThumbLocalPath(relativePath, thumbFileName);
 
@@ -67,19 +67,19 @@ namespace PolpAbp.InlineMedia.Services
                         //check, if the file was created, while we were waiting for the release of the mutex.
                         if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                         {
-                            //resizing required
-                            if (targetSize != 0)
+                            using (var image = Image.Load(picture.PictureBinary))
                             {
-                                using (var image = Image.Load(picture.PictureBinary))
+                                //resizing required
+                                if (targetSize != 0)
                                 {
                                     var newSize = CalculateDimensions(image.Size(), targetSize);
 
                                     int width = newSize.Width / 2;
                                     int height = newSize.Height / 2;
                                     image.Mutate(x => x.Resize(width, height));
-
-                                    image.Save(thumbFilePath);
                                 }
+
+                                image.Save(thumbFilePath);
                             }
                         }
                     }
