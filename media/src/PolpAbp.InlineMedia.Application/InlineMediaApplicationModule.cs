@@ -9,7 +9,8 @@ namespace PolpAbp.InlineMedia;
     typeof(InlineMediaDomainModule),
     typeof(InlineMediaApplicationContractsModule),
     typeof(AbpDddApplicationModule),
-    typeof(AbpAutoMapperModule)
+    typeof(AbpAutoMapperModule),
+    typeof(PolpAbp.Framework.PolpAbpFrameworkAbpExtensionsModule)
     )]
 public class InlineMediaApplicationModule : AbpModule
 {

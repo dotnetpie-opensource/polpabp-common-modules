@@ -13,13 +13,10 @@ namespace PolpAbp.InlineMedia.Services
     [RemoteService(false)]
     public class PictureStoreAppService : InlineMediaAppService, IPictureStoreAppService
     {
-        protected readonly INopFileProvider _fileProvider;
-        protected readonly IRepository<Picture> _pictureRepository;
+        protected readonly IRepository<Picture, Guid> _pictureRepository;
 
-        public PictureStoreAppService(INopFileProvider fileProvider,
-            IRepository<Picture> pictureRepository)
+        public PictureStoreAppService(IRepository<Picture, Guid> pictureRepository)
         {
-            _fileProvider = fileProvider;
             _pictureRepository = pictureRepository;
         }
 
@@ -28,7 +25,7 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="dto">The picture input dto</param>
         /// <returns>Id</returns>
-        public virtual async Task<Guid> InsertPictureAsync(PictureInputDto dto)
+        public virtual async Task<Guid> CreateAsync(PictureInputDto dto)
         {
             dto.MimeType = CommonHelper.EnsureNotNull(dto.MimeType);
             dto.MimeType = CommonHelper.EnsureMaximumLength(dto.MimeType, 20);
@@ -48,7 +45,7 @@ namespace PolpAbp.InlineMedia.Services
         /// <param name="id">The picture identifier</param>
         /// <param name="dto">Dto</param>
         /// <returns>Picture</returns>
-        public virtual async Task UpdatePictureAsync(Guid id, PictureInputDto dto)
+        public virtual async Task UpdateAsync(Guid id, PictureInputDto dto)
         {
             // Will throw an exception if no any item is found.
             var picture = await _pictureRepository.GetAsync(x => x.Id == id);
@@ -72,7 +69,7 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="id">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual async Task<PictureOutputDto> GetPictureByIdAsync(Guid id)
+        public virtual async Task<PictureOutputDto> GetByIdAsync(Guid id)
         {
             // Will throw an exception if no any item is found.
             var picture = await _pictureRepository.GetAsync(x => x.Id == id);
@@ -87,7 +84,7 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="id">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual async Task<PictureOutputDto> FindPictureByIdAsync(Guid id)
+        public virtual async Task<PictureOutputDto> FindByIdAsync(Guid id)
         {
             // Will throw an exception if no any item is found.
             var picture = await _pictureRepository.FindAsync(x => x.Id == id);
@@ -106,7 +103,7 @@ namespace PolpAbp.InlineMedia.Services
         /// Deletes a picture
         /// </summary>
         /// <param name="id">Picture</param>
-        public virtual async Task DeletePictureAsync(Guid id)
+        public virtual async Task DeleteAsync(Guid id)
         {
             var picture = await _pictureRepository.FindAsync(x => x.Id == id);
 

@@ -6,11 +6,11 @@ namespace PolpAbp.InlineMedia.Services
 {
     public interface IPictureStoreAppService
     {
-        Task<Guid> InsertPictureAsync(PictureInputDto dto);
-        Task UpdatePictureAsync(Guid id, PictureInputDto dto);
-        Task<PictureOutputDto> GetPictureByIdAsync(Guid id);
-        Task<PictureOutputDto> FindPictureByIdAsync(Guid id);
-        Task DeletePictureAsync(Guid id);
+        Task<Guid> CreateAsync(PictureInputDto dto);
+        Task UpdateAsync(Guid id, PictureInputDto dto);
+        Task<PictureOutputDto> GetByIdAsync(Guid id);
+        Task<PictureOutputDto> FindByIdAsync(Guid id);
+        Task DeleteAsync(Guid id);
     }
 }
 

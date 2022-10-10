@@ -29,7 +29,8 @@ public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
                             {
                                     new Claim(AbpClaimTypes.UserId,"2e701e62-0953-4dd3-910b-dc6cc93ccb0d"),
                                     new Claim(AbpClaimTypes.UserName,"admin"),
-                                    new Claim(AbpClaimTypes.Email,"admin@abp.io")
+                                    new Claim(AbpClaimTypes.Email,"admin@abp.io"),
+                                    new Claim(AbpClaimTypes.TenantId,"f3a82561-de59-4cf5-a482-968819ecbab8")
                             }
                         )
                     );

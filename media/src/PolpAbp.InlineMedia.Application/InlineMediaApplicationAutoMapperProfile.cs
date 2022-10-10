@@ -13,7 +13,8 @@ public class InlineMediaApplicationAutoMapperProfile : Profile
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
 
-        CreateMap<PictureInputDto, Picture>();
+        CreateMap<PictureInputDto, Picture>()
+            .IgnoreSourceMissingProperties();
 
         CreateMap<Picture, PictureOutputDto>();
     }

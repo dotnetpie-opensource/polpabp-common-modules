@@ -14,9 +14,7 @@ public class InlineMediaEntityFrameworkCoreModule : AbpModule
     {
         context.Services.AddAbpDbContext<InlineMediaDbContext>(options =>
         {
-                /* Add custom repositories here. Example:
-                 * options.AddRepository<Question, EfCoreQuestionRepository>();
-                 */
+            options.AddDefaultRepositories(includeAllEntities: false);
         });
     }
 }
