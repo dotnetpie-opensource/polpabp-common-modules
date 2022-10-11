@@ -1,5 +1,4 @@
 ﻿using System;
-using PolpAbp.Contact.Dtos;
 
 namespace PolpAbp.MultiTenancy.Dtos
 {
