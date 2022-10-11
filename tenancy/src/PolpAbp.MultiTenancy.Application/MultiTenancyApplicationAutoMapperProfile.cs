@@ -12,7 +12,8 @@ public class MultiTenancyApplicationAutoMapperProfile : Profile
         CreateMap<TenantAddOnInputDto, TenantAddOn>()
             .IgnoreSourceMissingProperties();
 
-        CreateMap<TenantAddOn, TenantAddOnOutputDto>();
+        CreateMap<TenantAddOn, TenantAddOnOutputDto>()
+            .ForMember(dst => dst.Addresses, o => o.Ignore());
 
         CreateMap<TenantAddOnOutputDto, TenantAddOnInputDto>();
 
@@ -27,10 +28,10 @@ public class MultiTenancyApplicationAutoMapperProfile : Profile
         CreateMap<TenantConactMap, TenantContactOutputDto>();
 
         CreateMap<TenantPictureMapInputDto, TenantPictureMap>()
-            .ForMember(dst => dst.PictureRole, o => o.Ignore());
-
-        CreateMap<TenantPictureMap, TenantPictureMapOutputDto>()
             .ForMember(dst => dst.PictureRole, o => o.Ignore())
             .IgnoreSourceMissingProperties();
+
+        CreateMap<TenantPictureMap, TenantPictureMapOutputDto>()
+            .ForMember(dst => dst.PictureRole, o => o.Ignore());
     }
 }
