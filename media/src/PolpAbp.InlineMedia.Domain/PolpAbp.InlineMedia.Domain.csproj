@@ -12,12 +12,4 @@
     <ProjectReference Include="..\PolpAbp.InlineMedia.Domain.Shared\PolpAbp.InlineMedia.Domain.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Domain\" />
-    <None Remove="Domain\Entities\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Domain\Entities\" />
-  </ItemGroup>
 </Project>
