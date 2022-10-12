@@ -9,5 +9,5 @@ namespace PolpAbp.InlineMedia.EntityFrameworkCore;
 [ConnectionStringName(InlineMediaDbProperties.ConnectionStringName)]
 public interface IInlineMediaDbContext : IEfCoreDbContext
 {
-    DbSet<Picture> Pictures { get; }
+    DbSet<Picture> Pictures { get; set; }
 }
