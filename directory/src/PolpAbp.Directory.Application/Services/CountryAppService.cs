@@ -53,7 +53,7 @@ namespace PolpAbp.Directory.Services
         // Follow DDD, we have to access country first. That's why we need the countryId.
         public async Task<IEnumerable<StateProvinceOutputDto>> ListStateProvincesByCountryAsync(Guid countryId, CancellationToken cancellationToken = default)
         {
-            var country = await _countryRepo.GetAsync(countryId, cancellationToken:cancellationToken);
+            var country = await _countryRepo.GetAsync(countryId, cancellationToken:cancellationToken, includeDetails:true);
             var s = country.StateProvinces;
 
             return s.Select(x => ObjectMapper.Map<StateProvince, StateProvinceOutputDto>(x));   
@@ -62,24 +62,16 @@ namespace PolpAbp.Directory.Services
         // Follow DDD, we have to access country first. That's why we need the countryId.
         public async Task AddStateProvinceAsync(Guid countryId, StateProvinceInputDto input, CancellationToken cancellationToken = default)
         {
-            var country = await _countryRepo.GetAsync(countryId, cancellationToken:cancellationToken);
-
             var item = new StateProvince(GuidGenerator.Create());
             ObjectMapper.Map<StateProvinceInputDto, StateProvince>(input, item);
 
-            await _countryRepo.AddStateProvincesAsync(country, new List<StateProvince> { item }, cancellationToken:cancellationToken);
+            await _countryRepo.AddStateProvincesAsync(countryId, new List<StateProvince> { item }, cancellationToken: cancellationToken);
         }
 
         // Follow DDD, we have to access country first. That's why we need the countryId.
         public async Task RemoveStateProvinceAsync(Guid countryId, Guid stateProvinceId, CancellationToken cancellationToken = default)
         {
-            var country = await _countryRepo.GetAsync(countryId, cancellationToken:cancellationToken);
-
-            var item = country.StateProvinces.Find(a => a.Id == stateProvinceId);
-            if (item != null)
-            {
-                await _countryRepo.RemoveStateProvincesAsync(country, new List<StateProvince> { item }, cancellationToken:cancellationToken);
-            }
+            await _countryRepo.RemoveStateProvincesAsync(countryId, new List<Guid> { stateProvinceId }, cancellationToken: cancellationToken);
         }
     }
 }

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Volo.Abp.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 
 namespace PolpAbp.Directory.EntityFrameworkCore
 {
-    public class EfCoreCountryRepository : EfCoreRepository<IDirectoryDbContext, Country, Guid>,
+    public class EfCoreCountryRepository : PolpAbpEfCoreRepository<IDirectoryDbContext, Country>,
         ICountryRepository
     {
 
@@ -18,26 +19,36 @@ namespace PolpAbp.Directory.EntityFrameworkCore
         {
         }
 
-        public async Task AddStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task AddStateProvincesAsync(Guid countryId, IEnumerable<StateProvince> stateProvinces,
+            bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            country.StateProvinces.AddRange(stateProvinces);
-            if (autoSave) {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+            await AddOrRemoveChildItemsAsync(countryId, a => a.StateProvinces, (entity) =>
+            {
+                entity.StateProvinces.AddRange(stateProvinces);
+            }, autoSave, cancellationToken);
         }
 
-        public async Task RemoveStateProvincesAsync(Country country, IEnumerable<StateProvince> stateProvinces, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task RemoveStateProvincesAsync(Guid countryId, IEnumerable<Guid> stateProvinceIds,
+            bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            foreach (var a in stateProvinces)
+            await AddOrRemoveChildItemsAsync(countryId, a => a.StateProvinces, (entity) =>
             {
-                country.StateProvinces.Remove(a);
-            }
-            if (autoSave)
+                var candidates = entity.StateProvinces.Where(b => stateProvinceIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.StateProvinces.Remove(c);
+                }
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task UpdateStateProvinceAsync(Guid countryId, Guid stateProvinceId,
+            Action<StateProvince> func, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await UpdateChildItemAsync(countryId, a => a.StateProvinces, (entity) =>
             {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                var candidate = entity.StateProvinces.Find(b => b.Id == stateProvinceId);
+                func(candidate);
+            }, autoSave, cancellationToken);
         }
     }
 }

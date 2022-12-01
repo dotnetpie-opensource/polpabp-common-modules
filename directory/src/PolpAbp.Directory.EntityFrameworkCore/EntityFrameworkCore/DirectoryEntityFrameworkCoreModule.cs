@@ -3,12 +3,13 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using PolpAbp.Directory.Domain.Repositories;
 using PolpAbp.Directory.Domain.Entities;
+using PolpAbp.Extensions.EntityFrameworkCore;
 
 namespace PolpAbp.Directory.EntityFrameworkCore;
 
 [DependsOn(
     typeof(DirectoryDomainModule),
-    typeof(AbpEntityFrameworkCoreModule)
+    typeof(PolpAbpExtensionsEntityFrameworkCoreModule)
 )]
 public class DirectoryEntityFrameworkCoreModule : AbpModule
 {
@@ -17,7 +18,6 @@ public class DirectoryEntityFrameworkCoreModule : AbpModule
         context.Services.AddAbpDbContext<DirectoryDbContext>(options =>
         {
             // Only include the aggregated ones.
-            // options.AddDefaultRepositories(includeAllEntities: false);
             options.AddRepository<Country, EfCoreCountryRepository>();
         });
     }
