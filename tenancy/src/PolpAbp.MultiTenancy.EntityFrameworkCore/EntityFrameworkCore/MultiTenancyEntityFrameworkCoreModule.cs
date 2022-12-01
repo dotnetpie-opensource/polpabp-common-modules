@@ -2,12 +2,13 @@
 using PolpAbp.MultiTenancy.Domain.Entities;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
+using PolpAbp.Extensions.EntityFrameworkCore;
 
 namespace PolpAbp.MultiTenancy.EntityFrameworkCore;
 
 [DependsOn(
     typeof(MultiTenancyDomainModule),
-    typeof(AbpEntityFrameworkCoreModule)
+    typeof(PolpAbpExtensionsEntityFrameworkCoreModule)
 )]
 public class MultiTenancyEntityFrameworkCoreModule : AbpModule
 {

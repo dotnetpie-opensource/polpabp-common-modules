@@ -14,7 +14,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace PolpAbp.MultiTenancy.EntityFrameworkCore
 {
-    public class EfCoreTenantAddOnRepository : EfCoreRepository<IMultiTenancyDbContext, TenantAddOn, Guid>,
+    public class EfCoreTenantAddOnRepository : PolpAbpEfCoreRepository<IMultiTenancyDbContext, TenantAddOn>,
         ITenantAddOnRepository
     {
         public EfCoreTenantAddOnRepository(IDbContextProvider<IMultiTenancyDbContext> dbContextProvider)
@@ -22,73 +22,94 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
         }
 
-        public async Task AddAddressesAsync(TenantAddOn addOn, IEnumerable<TenantAddressMap> addressMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task AddAddressMapsAsync(Guid addOnId, IEnumerable<TenantAddressMap> addressMaps, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            addOn.AddressMaps.AddRange(addressMaps);
-            if (autoSave)
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.AddressMaps, (entity) =>
             {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                entity.AddressMaps.AddRange(addressMaps);
+            }, autoSave, cancellationToken);
         }
 
-        public async Task RemoveAddressesAsync(TenantAddOn addOn, IEnumerable<TenantAddressMap> addressMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task RemoveAddressMapsAsync(Guid addOnId, IEnumerable<Guid> addressMapIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            foreach (var a in addressMaps)
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.AddressMaps, (entity) =>
             {
-                addOn.AddressMaps.Remove(a);
-            }
-            if (autoSave)
-            {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                var candidates = entity.AddressMaps.Where(b => addressMapIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.AddressMaps.Remove(c);
+                }
+            }, autoSave, cancellationToken);
         }
 
-        public async Task AddContactsAsync(TenantAddOn addOn, IEnumerable<TenantConactMap> contactMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task UpdateAddressMapAsync(Guid addOnId, Guid addressMapId,
+            Action<TenantAddressMap> func, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            addOn.ContactMaps.AddRange(contactMaps);
-            if (autoSave)
+            await UpdateChildItemAsync(addOnId, a => a.AddressMaps, (entity) =>
             {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                var candidate = entity.AddressMaps.Find(b => b.Id == addressMapId);
+                func(candidate);
+            }, autoSave, cancellationToken);
         }
 
-        public async Task RemoveContactsAsync(TenantAddOn addOn, IEnumerable<TenantConactMap> contactMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task AddContactMapsAsync(Guid addOnId, IEnumerable<TenantConactMap> contactMaps, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            foreach (var a in contactMaps)
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
-                addOn.ContactMaps.Remove(a);
-            }
-            if (autoSave)
-            {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                entity.ContactMaps.AddRange(contactMaps);
+            }, autoSave, cancellationToken);
         }
 
-        public async Task AddPicturesAsync(TenantAddOn addOn, IEnumerable<TenantPictureMap> pictureMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task RemoveContactMapsAsync(Guid addOnId, IEnumerable<Guid> contactMapIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            addOn.PictureMaps.AddRange(pictureMaps);
-            if (autoSave)
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                var candidates = entity.ContactMaps.Where(b => contactMapIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.ContactMaps.Remove(c);
+                }
+            }, autoSave, cancellationToken);
         }
 
-        public async Task RemovePicturesAsync(TenantAddOn addOn, IEnumerable<TenantPictureMap> pictureMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task UpdateContactMapAsync(Guid addOnId, Guid contactMapId,
+            Action<TenantConactMap> func, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var context = await GetDbContextAsync();
-            foreach (var a in pictureMaps)
+            await UpdateChildItemAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
-                addOn.PictureMaps.Remove(a);
-            }
-            if (autoSave)
+                var candidate = entity.ContactMaps.Find(b => b.Id == contactMapId);
+                func(candidate);
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task AddPictureMapsAsync(Guid addOnId, IEnumerable<TenantPictureMap> pictureMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.PictureMaps, (entity) =>
             {
-                await context.SaveChangesAsync(GetCancellationToken(cancellationToken));
-            }
+                entity.PictureMaps.AddRange(pictureMaps);
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task RemovePictureMapsAsync(Guid addOnId, IEnumerable<Guid> pictureMapIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.PictureMaps, (entity) =>
+            {
+                var candidates = entity.PictureMaps.Where(b => pictureMapIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.PictureMaps.Remove(c);
+                }
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task UpdatePicutreMapAsync(Guid addOnId, Guid pictureMapId,
+            Action<TenantPictureMap> func, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await UpdateChildItemAsync(addOnId, a => a.PictureMaps, (entity) =>
+            {
+                var candidate = entity.PictureMaps.Find(b => b.Id == pictureMapId);
+                func(candidate);
+            }, autoSave, cancellationToken);
         }
 
         public async Task<Tuple<List<TenantAddOn>, int>> SearchTenantsAsync(int skipCount, int maxResultCount, string sorting,
