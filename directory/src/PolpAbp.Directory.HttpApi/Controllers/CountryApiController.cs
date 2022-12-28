@@ -8,7 +8,7 @@ using PolpAbp.Directory.Services;
 
 namespace PolpAbp.Directory.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [Route("api/directory")]
     public class CountryApiController : DirectoryController
 	{
