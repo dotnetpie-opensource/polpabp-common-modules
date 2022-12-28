@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 
 namespace PolpAbp.Directory.Services
 {
+    [RemoteService(false)]
     public class CountryAppService : DirectoryAppService, ICountryAppService
     {
 
