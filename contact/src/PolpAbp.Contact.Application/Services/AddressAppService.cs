@@ -5,6 +5,9 @@ using PolpAbp.Contact.Domain.Entities;
 using System.Threading.Tasks;
 using PolpAbp.Contact.Dtos;
 using System.Threading;
+using System.Linq.Dynamic.Core;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace PolpAbp.Contact.Services
 {
@@ -53,7 +56,17 @@ namespace PolpAbp.Contact.Services
             await _addressRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }
 
+        public async Task<List<AddressOutputDto>> SearchAsync(Guid[] ids, string sorting = null)
+        {
+            var query = await _addressRepo.GetQueryableAsync();
+            query = query.Where(x => ids.Contains(x.Id));
+            if (!string.IsNullOrEmpty(sorting))
+            {
+                query = query.OrderBy(sorting);
+            }
 
+            return query.Select(y => ObjectMapper.Map<Address, AddressOutputDto>(y)).ToList();
+        }
     }
 }
 
