@@ -35,6 +35,11 @@ namespace PolpAbp.Contact.Domain.Entities
         // is not included in the search scope.
         public Guid? OwnerId { get; set; }
 
+        // Like the above, this field is used to
+        // divide the addresses into different groups
+        // from another angle.
+        public int RoleId { get; set; }
+
         public Address() : base()
         {
         }
