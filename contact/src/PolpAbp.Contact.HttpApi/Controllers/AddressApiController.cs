@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using PolpAbp.Contact.Dtos;
 using PolpAbp.Contact.Services;
+using Volo.Abp.Application.Dtos;
 
 namespace PolpAbp.Contact.Controllers
 {
@@ -48,6 +49,13 @@ namespace PolpAbp.Contact.Controllers
             await _addressAppService.UpdateAsyc(id, a, cancellationToken);
         }
 
+
+        [HttpGet("search")]
+        public async Task<PagedResultDto<AddressOutputDto>> SearchAsync([FromQuery] SearchAddressDto input, CancellationToken cancellationToken = default)
+        {
+            var ret = await _addressAppService.SearchAsync(input, cancellationToken);
+            return ret;
+        }
     }
 }
 

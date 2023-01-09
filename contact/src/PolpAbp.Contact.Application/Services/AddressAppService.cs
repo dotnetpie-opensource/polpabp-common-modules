@@ -8,6 +8,7 @@ using System.Threading;
 using System.Linq.Dynamic.Core;
 using System.Linq;
 using System.Collections.Generic;
+using Volo.Abp.Application.Dtos;
 
 namespace PolpAbp.Contact.Services
 {
@@ -56,16 +57,44 @@ namespace PolpAbp.Contact.Services
             await _addressRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }
 
-        public async Task<List<AddressOutputDto>> SearchAsync(Guid[] ids, string sorting = null)
+        public async Task<List<AddressOutputDto>> SearchAsync(Guid[] ids, string sorting = null, CancellationToken cancellationToken = default)
         {
             var query = await _addressRepo.GetQueryableAsync();
             query = query.Where(x => ids.Contains(x.Id));
-            if (!string.IsNullOrEmpty(sorting))
-            {
-                query = query.OrderBy(sorting);
-            }
+            var sortKey = string.IsNullOrEmpty(sorting) ? "StateId ASC, StateProvinceId ASC, City ASC, Address1 ASC" : sorting;
+            var sorted = query.OrderBy(sorting);
 
-            return query.Select(y => ObjectMapper.Map<Address, AddressOutputDto>(y)).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return sorted.Select(y => ObjectMapper.Map<Address, AddressOutputDto>(y)).ToList();
+        }
+
+        // Search the public addresses.
+        public async Task<PagedResultDto<AddressOutputDto>> SearchAsync(SearchAddressDto input, CancellationToken cancellationToken = default)
+        {
+            var query = await _addressRepo.GetQueryableAsync();
+            query = query.Where(x => x.RoleId == input.RoleId);
+            query = query.Where(x => x.OwnerId == null);
+            query = query.WhereIf(input.Keyword != null, x => x.Address1.Contains(input.Keyword) || x.City.Contains(input.Keyword));
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var total = query.Count();
+
+            var sortKey = string.IsNullOrEmpty(input.Sorting) ? "StateId ASC, StateProvinceId ASC, City ASC, Address1 ASC" : input.Sorting;
+            var sorted = query.OrderBy(sortKey);
+
+            var range = sorted.Skip(input.SkipCount).Take(input.MaxResultCount);
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var items = range.Select(y => ObjectMapper.Map<Address, AddressOutputDto>(y)).ToList();
+
+            var ret = new PagedResultDto<AddressOutputDto>
+            {
+                Items = items,
+                TotalCount = total
+            };
+
+            return ret;
         }
     }
 }
