@@ -8,7 +8,7 @@ using PolpAbp.Contact.Services;
 namespace PolpAbp.Contact.Controllers
 {
     [Authorize]
-    [Route("api/contact/address")]
+    [Route("api/contact/addresses")]
     public class AddressApiController : ContactController
     {
         private readonly IAddressAppService _addressAppService;
