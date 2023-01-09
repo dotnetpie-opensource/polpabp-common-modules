@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +20,17 @@ namespace PolpAbp.Directory.Controllers
 			_countryAppService = countryAppService;
 		}
 
+        // List all countries.
 		[HttpGet("list-countries")]
-		public Task<IEnumerable<CountryOutputDto>> ListCountriesAsync()
+		public Task<IEnumerable<CountryOutputDto>> ListCountriesAsync(CancellationToken cancellationToken = default)
 		{
-			return _countryAppService.ListAsyc();
+			return _countryAppService.ListAsyc(cancellationToken);
 		}
 
         [HttpGet("list-states-by-country/{id:Guid}")]
-        public Task<IEnumerable<StateProvinceOutputDto>> ListStatesByCountryAsync([FromRoute] Guid id)
+        public Task<IEnumerable<StateProvinceOutputDto>> ListStatesByCountryAsync([FromRoute] Guid id, CancellationToken cancellationToken = default)
         {
-            return _countryAppService.ListStateProvincesByCountryAsync(id);
+            return _countryAppService.ListStateProvincesByCountryAsync(id, cancellationToken);
         }
     }
 }
