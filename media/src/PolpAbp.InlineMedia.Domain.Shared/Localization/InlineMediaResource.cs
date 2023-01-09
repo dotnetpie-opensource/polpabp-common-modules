@@ -2,7 +2,7 @@
 
 namespace PolpAbp.InlineMedia.Localization;
 
-[LocalizationResourceName("InlineMedia")]
+[LocalizationResourceName("PolpAbpInlineMedia")]
 public class InlineMediaResource
 {
 

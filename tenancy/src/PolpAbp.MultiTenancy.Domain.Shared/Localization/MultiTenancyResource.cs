@@ -2,7 +2,7 @@
 
 namespace PolpAbp.MultiTenancy.Localization;
 
-[LocalizationResourceName("MultiTenancy")]
+[LocalizationResourceName("PolpAbpMultiTenancy")]
 public class MultiTenancyResource
 {
 

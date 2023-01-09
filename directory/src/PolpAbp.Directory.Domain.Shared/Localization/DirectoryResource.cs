@@ -2,7 +2,7 @@
 
 namespace PolpAbp.Directory.Localization;
 
-[LocalizationResourceName("Directory")]
+[LocalizationResourceName("PolpAbpDirectory")]
 public class DirectoryResource
 {
 

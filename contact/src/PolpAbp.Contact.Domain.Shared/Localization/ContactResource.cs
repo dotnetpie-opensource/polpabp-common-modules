@@ -2,7 +2,7 @@
 
 namespace PolpAbp.Contact.Localization;
 
-[LocalizationResourceName("Contact")]
+[LocalizationResourceName("PolpAbpContact")]
 public class ContactResource
 {
 
