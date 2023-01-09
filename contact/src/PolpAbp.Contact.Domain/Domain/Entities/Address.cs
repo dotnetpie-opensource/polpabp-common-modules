@@ -30,6 +30,11 @@ namespace PolpAbp.Contact.Domain.Entities
 
         public Guid? TenantId { get; set; }
 
+        // Used to tell if an address is public.
+        // An address with a non-nullable value
+        // is not included in the search scope.
+        public Guid? OwnerId { get; set; }
+
         public Address() : base()
         {
         }
