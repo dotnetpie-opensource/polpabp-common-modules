@@ -61,8 +61,8 @@ namespace PolpAbp.Contact.Services
         {
             var query = await _addressRepo.GetQueryableAsync();
             query = query.Where(x => ids.Contains(x.Id));
-            var sortKey = string.IsNullOrEmpty(sorting) ? "StateId ASC, StateProvinceId ASC, City ASC, Address1 ASC" : sorting;
-            var sorted = query.OrderBy(sorting);
+            var sortKey = string.IsNullOrEmpty(sorting) ? "CountryId ASC, StateProvinceId ASC, City ASC, Address1 ASC" : sorting;
+            var sorted = query.OrderBy(sortKey);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -80,7 +80,7 @@ namespace PolpAbp.Contact.Services
             cancellationToken.ThrowIfCancellationRequested();
             var total = query.Count();
 
-            var sortKey = string.IsNullOrEmpty(input.Sorting) ? "StateId ASC, StateProvinceId ASC, City ASC, Address1 ASC" : input.Sorting;
+            var sortKey = string.IsNullOrEmpty(input.Sorting) ? "CountryId ASC, StateProvinceId ASC, City ASC, Address1 ASC" : input.Sorting;
             var sorted = query.OrderBy(sortKey);
 
             var range = sorted.Skip(input.SkipCount).Take(input.MaxResultCount);
