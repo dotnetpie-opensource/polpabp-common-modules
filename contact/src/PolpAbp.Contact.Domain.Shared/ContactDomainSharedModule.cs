@@ -25,7 +25,7 @@ public class ContactDomainSharedModule : AbpModule
             options.Resources
                 .Add<ContactResource>("en")
                 .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/Contact");
+                .AddVirtualJson("/Localization/PolpAbp/Contact");
         });
 
         Configure<AbpExceptionLocalizationOptions>(options =>
