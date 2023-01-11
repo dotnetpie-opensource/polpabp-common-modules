@@ -25,7 +25,7 @@ public class InlineMediaDomainSharedModule : AbpModule
             options.Resources
                 .Add<InlineMediaResource>("en")
                 .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/InlineMedia");
+                .AddVirtualJson("/Localization/PolpAbp/InlineMedia");
         });
 
         Configure<AbpExceptionLocalizationOptions>(options =>
