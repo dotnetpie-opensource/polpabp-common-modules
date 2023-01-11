@@ -25,7 +25,7 @@ public class DirectoryDomainSharedModule : AbpModule
             options.Resources
                 .Add<DirectoryResource>("en")
                 .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/Directory");
+                .AddVirtualJson("/Localization/PolpAbp/Directory");
         });
 
         Configure<AbpExceptionLocalizationOptions>(options =>
