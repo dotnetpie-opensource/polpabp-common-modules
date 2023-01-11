@@ -25,7 +25,7 @@ public class MultiTenancyDomainSharedModule : AbpModule
             options.Resources
                 .Add<MultiTenancyResource>("en")
                 .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/MultiTenancy");
+                .AddVirtualJson("/Localization/PolpAbp/MultiTenancy");
         });
 
         Configure<AbpExceptionLocalizationOptions>(options =>
