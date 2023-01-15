@@ -22,7 +22,7 @@ namespace PolpAbp.Contact.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<AddressOutputDto> LoadByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken = default)
         {
-            var ret = await _addressAppService.FindByIdAsync(id, cancellationToken);
+            var ret = await _addressAppService.FindByIdAsync(id, cancellationToken: cancellationToken);
             // todo: Throw an exception.
             return ret;
         }
@@ -42,8 +42,7 @@ namespace PolpAbp.Contact.Controllers
             [FromBody] JsonPatchDocument<AddressInputDto> data, CancellationToken cancellationToken = default)
         {
             // todo: Redundancy
-            var a = await _addressAppService.FindByIdAsync(id, cancellationToken);
-            // todo: Throw an exception.
+            var a = await _addressAppService.FindByIdAsync(id, true, cancellationToken);
             data.ApplyTo(a);
             // todo: Check the redundancy.
             await _addressAppService.UpdateAsyc(id, a, cancellationToken);
