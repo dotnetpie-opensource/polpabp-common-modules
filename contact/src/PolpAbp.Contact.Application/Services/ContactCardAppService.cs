@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp;
 using System.Threading;
+using Volo.Abp.Domain.Entities;
 
 namespace PolpAbp.Contact.Services
 {
@@ -18,12 +19,17 @@ namespace PolpAbp.Contact.Services
             _contactCardRepo = contactCardRepo;
         }
 
-        public async Task<ContactCardOutputDto> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<ContactCardOutputDto> FindByIdAsync(Guid id, bool throwException = false, CancellationToken cancellationToken = default)
         {
             var source = await _contactCardRepo.FindAsync(a => a.Id == id, cancellationToken: cancellationToken);
             if (source != null)
             {
                 return ObjectMapper.Map<ContactCard, ContactCardOutputDto>(source);
+            }
+
+            if (throwException)
+            {
+                throw new EntityNotFoundException(typeof(ContactCard), id);
             }
 
             return null;
@@ -44,11 +50,7 @@ namespace PolpAbp.Contact.Services
 
         public async Task UpdateAsyc(Guid id, ContactCardInputDto input, CancellationToken cancellationToken = default)
         {
-            var target = await _contactCardRepo.FindAsync(a => a.Id == id, cancellationToken: cancellationToken);
-            if (target == null)
-            {
-                throw new ArgumentException($"No record for {id}");
-            }
+            var target = await _contactCardRepo.GetAsync(a => a.Id == id, cancellationToken: cancellationToken);
             ObjectMapper.Map<ContactCardInputDto, ContactCard>(input, target);
             await _contactCardRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }

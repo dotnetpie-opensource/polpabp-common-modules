@@ -37,11 +37,7 @@ namespace PolpAbp.Directory.Services
 
         public async Task UpdateAsyc(Guid id, CountryInputDto input, CancellationToken cancellationToken = default)
         {
-            var target = await _countryRepo.FindAsync(id, cancellationToken:cancellationToken);
-            if (target == null)
-            {
-                throw new ArgumentException($"No record for {id}");
-            }
+            var target = await _countryRepo.GetAsync(id, cancellationToken:cancellationToken);
             ObjectMapper.Map<CountryInputDto, Country>(input, target);
             await _countryRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }

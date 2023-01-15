@@ -34,11 +34,7 @@ namespace PolpAbp.MultiTenancy.Services
 
         public async Task UpdateAsyc(Guid id, TenantAddOnInputDto input, CancellationToken cancellationToken = default)
         {
-            var target = await _tenantAddOnRepository.FindAsync(id, cancellationToken: cancellationToken);
-            if (target == null)
-            {
-                throw new ArgumentException($"No record for {id}");
-            }
+            var target = await _tenantAddOnRepository.GetAsync(id, cancellationToken: cancellationToken);
             ObjectMapper.Map<TenantAddOnInputDto, TenantAddOn>(input, target);
             await _tenantAddOnRepository.UpdateAsync(target, cancellationToken: cancellationToken);
         }

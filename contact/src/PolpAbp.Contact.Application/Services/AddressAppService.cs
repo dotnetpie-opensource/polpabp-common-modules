@@ -9,6 +9,7 @@ using System.Linq.Dynamic.Core;
 using System.Linq;
 using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Domain.Entities;
 
 namespace PolpAbp.Contact.Services
 {
@@ -22,12 +23,17 @@ namespace PolpAbp.Contact.Services
             _addressRepo = addressRepo;
         }
 
-        public async Task<AddressOutputDto> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<AddressOutputDto> FindByIdAsync(Guid id, bool throwException = false, CancellationToken cancellationToken = default)
         {
             var source = await _addressRepo.FindAsync(a => a.Id == id, cancellationToken:cancellationToken);
             if (source != null)
             {
                 return ObjectMapper.Map<Address, AddressOutputDto>(source);
+            }
+
+            if (throwException)
+            {
+                throw new EntityNotFoundException(typeof(Address), id);
             }
 
             return null;
@@ -48,11 +54,7 @@ namespace PolpAbp.Contact.Services
 
         public async Task UpdateAsyc(Guid id, AddressInputDto input, CancellationToken cancellationToken = default)
         {
-            var target = await _addressRepo.FindAsync(a => a.Id == id, cancellationToken:cancellationToken);
-            if (target == null)
-            {
-                throw new ArgumentException($"No record for {id}");
-            }
+            var target = await _addressRepo.GetAsync(a => a.Id == id, cancellationToken:cancellationToken);
             ObjectMapper.Map<AddressInputDto, Address>(input, target);
             await _addressRepo.UpdateAsync(target, cancellationToken:cancellationToken);
         }
