@@ -8,10 +8,10 @@ namespace PolpAbp.Contact.Services
 {
     public interface IContactCardAppService : IApplicationService
     {
-        Task<Guid> CreateAsync(ContactCardInputDto dto, CancellationToken cancellationToken = default);
-        Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<Guid> CreateAsync(ContactCardInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default);
         Task<ContactCardOutputDto> FindByIdAsync(Guid id, bool throwException = false, CancellationToken cancellationToken = default);
-        Task UpdateAsyc(Guid id, ContactCardInputDto input, CancellationToken cancellationToken = default);
+        Task UpdateAsyc(Guid id, ContactCardInputDto input, bool autoSave = false, CancellationToken cancellationToken = default);
     }
 }
 

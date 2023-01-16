@@ -35,24 +35,24 @@ namespace PolpAbp.Contact.Services
             return null;
         }
 
-        public async Task<Guid> CreateAsync(ContactCardInputDto dto, CancellationToken cancellationToken = default)
+        public async Task<Guid> CreateAsync(ContactCardInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = new ContactCard(GuidGenerator.Create());
             ObjectMapper.Map<ContactCardInputDto, ContactCard>(dto, target);
-            var a = await _contactCardRepo.InsertAsync(target, cancellationToken: cancellationToken);
+            var a = await _contactCardRepo.InsertAsync(target, autoSave, cancellationToken: cancellationToken);
             return a.Id;
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            await _contactCardRepo.DeleteAsync(a => a.Id == id, cancellationToken: cancellationToken);
+            await _contactCardRepo.DeleteAsync(a => a.Id == id, autoSave, cancellationToken: cancellationToken);
         }
 
-        public async Task UpdateAsyc(Guid id, ContactCardInputDto input, CancellationToken cancellationToken = default)
+        public async Task UpdateAsyc(Guid id, ContactCardInputDto input, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = await _contactCardRepo.GetAsync(a => a.Id == id, cancellationToken: cancellationToken);
             ObjectMapper.Map<ContactCardInputDto, ContactCard>(input, target);
-            await _contactCardRepo.UpdateAsync(target, cancellationToken:cancellationToken);
+            await _contactCardRepo.UpdateAsync(target, autoSave, cancellationToken:cancellationToken);
         }
     }
 

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Domain.Repositories;
 
 namespace PolpAbp.Directory.Services
 {
@@ -22,24 +21,24 @@ namespace PolpAbp.Directory.Services
             _countryRepo = countryRepo;
         }
 
-        public async Task<Guid> CreateAsync(CountryInputDto dto, CancellationToken cancellationToken = default)
+        public async Task<Guid> CreateAsync(CountryInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = new Country(GuidGenerator.Create());
             ObjectMapper.Map<CountryInputDto, Country>(dto, target);
-            var a = await _countryRepo.InsertAsync(target, cancellationToken:cancellationToken);
+            var a = await _countryRepo.InsertAsync(target, autoSave, cancellationToken:cancellationToken);
             return a.Id;
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            await _countryRepo.DeleteAsync(id, cancellationToken:cancellationToken);
+            await _countryRepo.DeleteAsync(id, autoSave, cancellationToken:cancellationToken);
         }
 
-        public async Task UpdateAsyc(Guid id, CountryInputDto input, CancellationToken cancellationToken = default)
+        public async Task UpdateAsyc(Guid id, CountryInputDto input, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = await _countryRepo.GetAsync(id, cancellationToken:cancellationToken);
             ObjectMapper.Map<CountryInputDto, Country>(input, target);
-            await _countryRepo.UpdateAsync(target, cancellationToken:cancellationToken);
+            await _countryRepo.UpdateAsync(target, autoSave, cancellationToken:cancellationToken);
         }
 
         public async Task<IEnumerable<CountryOutputDto>> ListAsyc(CancellationToken cancellationToken = default)
@@ -58,18 +57,18 @@ namespace PolpAbp.Directory.Services
         }
 
         // Follow DDD, we have to access country first. That's why we need the countryId.
-        public async Task AddStateProvinceAsync(Guid countryId, StateProvinceInputDto input, CancellationToken cancellationToken = default)
+        public async Task AddStateProvinceAsync(Guid countryId, StateProvinceInputDto input, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var item = new StateProvince(GuidGenerator.Create());
             ObjectMapper.Map<StateProvinceInputDto, StateProvince>(input, item);
 
-            await _countryRepo.AddStateProvincesAsync(countryId, new List<StateProvince> { item }, cancellationToken: cancellationToken);
+            await _countryRepo.AddStateProvincesAsync(countryId, new List<StateProvince> { item }, autoSave, cancellationToken: cancellationToken);
         }
 
         // Follow DDD, we have to access country first. That's why we need the countryId.
-        public async Task RemoveStateProvinceAsync(Guid countryId, Guid stateProvinceId, CancellationToken cancellationToken = default)
+        public async Task RemoveStateProvinceAsync(Guid countryId, Guid stateProvinceId, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            await _countryRepo.RemoveStateProvincesAsync(countryId, new List<Guid> { stateProvinceId }, cancellationToken: cancellationToken);
+            await _countryRepo.RemoveStateProvincesAsync(countryId, new List<Guid> { stateProvinceId }, autoSave, cancellationToken: cancellationToken);
         }
     }
 }

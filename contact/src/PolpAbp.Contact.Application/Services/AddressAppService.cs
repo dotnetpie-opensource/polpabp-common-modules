@@ -39,24 +39,24 @@ namespace PolpAbp.Contact.Services
             return null;
         }
 
-        public async Task<Guid> CreateAsync(AddressInputDto dto, CancellationToken cancellationToken = default)
+        public async Task<Guid> CreateAsync(AddressInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = new Address(GuidGenerator.Create());
             ObjectMapper.Map<AddressInputDto, Address>(dto, target);
-            var a = await _addressRepo.InsertAsync(target, cancellationToken: cancellationToken);
+            var a = await _addressRepo.InsertAsync(target, autoSave, cancellationToken: cancellationToken);
             return a.Id;
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, bool autoSave = false,  CancellationToken cancellationToken = default)
         {
-            await _addressRepo.DeleteAsync(a => a.Id == id, cancellationToken:cancellationToken);
+            await _addressRepo.DeleteAsync(a => a.Id == id, autoSave, cancellationToken:cancellationToken);
         }
 
-        public async Task UpdateAsyc(Guid id, AddressInputDto input, CancellationToken cancellationToken = default)
+        public async Task UpdateAsyc(Guid id, AddressInputDto input, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = await _addressRepo.GetAsync(a => a.Id == id, cancellationToken:cancellationToken);
             ObjectMapper.Map<AddressInputDto, Address>(input, target);
-            await _addressRepo.UpdateAsync(target, cancellationToken:cancellationToken);
+            await _addressRepo.UpdateAsync(target, autoSave, cancellationToken:cancellationToken);
         }
 
         public async Task<List<AddressOutputDto>> SearchAsync(Guid[] ids, string sorting = null, CancellationToken cancellationToken = default)

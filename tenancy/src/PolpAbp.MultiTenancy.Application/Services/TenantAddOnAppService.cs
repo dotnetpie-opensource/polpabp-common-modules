@@ -20,23 +20,23 @@ namespace PolpAbp.MultiTenancy.Services
             _tenantAddOnRepository = tenantAddOnRepository;
         }
 
-        public async Task<Guid> CreateAsync(TenantAddOnInputDto dto, CancellationToken cancellationToken = default)
+        public async Task<Guid> CreateAsync(TenantAddOnInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = ObjectMapper.Map<TenantAddOnInputDto, TenantAddOn>(dto);
-            var a = await _tenantAddOnRepository.InsertAsync(target, cancellationToken: cancellationToken);
+            var a = await _tenantAddOnRepository.InsertAsync(target, autoSave, cancellationToken: cancellationToken);
             return a.Id;
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            await _tenantAddOnRepository.DeleteAsync(id, cancellationToken: cancellationToken);
+            await _tenantAddOnRepository.DeleteAsync(id, autoSave, cancellationToken: cancellationToken);
         }
 
-        public async Task UpdateAsyc(Guid id, TenantAddOnInputDto input, CancellationToken cancellationToken = default)
+        public async Task UpdateAsyc(Guid id, TenantAddOnInputDto input, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var target = await _tenantAddOnRepository.GetAsync(id, cancellationToken: cancellationToken);
             ObjectMapper.Map<TenantAddOnInputDto, TenantAddOn>(input, target);
-            await _tenantAddOnRepository.UpdateAsync(target, cancellationToken: cancellationToken);
+            await _tenantAddOnRepository.UpdateAsync(target, autoSave, cancellationToken: cancellationToken);
         }
     }
 }

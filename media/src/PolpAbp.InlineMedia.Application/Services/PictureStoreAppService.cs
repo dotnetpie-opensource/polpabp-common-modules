@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using PolpAbp.InlineMedia.Domain.Entities;
 using PolpAbp.InlineMedia.Dtos;
@@ -25,7 +26,7 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="dto">The picture input dto</param>
         /// <returns>Id</returns>
-        public virtual async Task<Guid> CreateAsync(PictureInputDto dto)
+        public virtual async Task<Guid> CreateAsync(PictureInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             dto.MimeType = CommonHelper.EnsureNotNull(dto.MimeType);
             dto.MimeType = CommonHelper.EnsureMaximumLength(dto.MimeType, 20);
@@ -33,7 +34,7 @@ namespace PolpAbp.InlineMedia.Services
             dto.SeoFilename = CommonHelper.EnsureMaximumLength(dto.SeoFilename, 100);
 
             var picture = ObjectMapper.Map<PictureInputDto, Picture>(dto);
-            await _pictureRepository.InsertAsync(picture);
+            await _pictureRepository.InsertAsync(picture, autoSave, cancellationToken);
 
             return picture.Id;
         }
@@ -45,7 +46,7 @@ namespace PolpAbp.InlineMedia.Services
         /// <param name="id">The picture identifier</param>
         /// <param name="dto">Dto</param>
         /// <returns>Picture</returns>
-        public virtual async Task UpdateAsync(Guid id, PictureInputDto dto)
+        public virtual async Task UpdateAsync(Guid id, PictureInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             // Will throw an exception if no any item is found.
             var picture = await _pictureRepository.GetAsync(x => x.Id == id);
@@ -60,7 +61,7 @@ namespace PolpAbp.InlineMedia.Services
             dto.SeoFilename = CommonHelper.EnsureMaximumLength(dto.SeoFilename, 100);
 
             ObjectMapper.Map<PictureInputDto, Picture>(dto, picture);
-            await _pictureRepository.UpdateAsync(picture);
+            await _pictureRepository.UpdateAsync(picture, autoSave, cancellationToken);
         }
 
 
@@ -103,13 +104,13 @@ namespace PolpAbp.InlineMedia.Services
         /// Deletes a picture
         /// </summary>
         /// <param name="id">Picture</param>
-        public virtual async Task DeleteAsync(Guid id)
+        public virtual async Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var picture = await _pictureRepository.FindAsync(x => x.Id == id);
 
             if (picture != null)
             {
-                await _pictureRepository.DeleteAsync(picture);
+                await _pictureRepository.DeleteAsync(picture, autoSave, cancellationToken);
             }
 
         }
