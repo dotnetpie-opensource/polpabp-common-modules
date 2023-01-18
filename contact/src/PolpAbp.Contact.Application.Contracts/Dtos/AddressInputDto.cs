@@ -16,6 +16,7 @@ namespace PolpAbp.Contact.Dtos
         public string StateProvinceName { get; set; }
 
         [Required]
+        [MinLength(1)]
         public string City { get; set; }
 
         public string County { get; set; }
@@ -23,11 +24,13 @@ namespace PolpAbp.Contact.Dtos
         public int StreeNo { get; set; }
 
         [Required]
+        [MinLength(1)]
         public string Address1 { get; set; }
 
         public string Address2 { get; set; }
 
         [Required]
+        [MinLength(1)]
         public string ZipCode { get; set; }
 
     }
