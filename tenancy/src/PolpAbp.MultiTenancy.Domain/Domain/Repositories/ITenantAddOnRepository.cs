@@ -11,21 +11,21 @@ namespace PolpAbp.MultiTenancy.Domain.Repositories
     {
         Task AddAddressMapsAsync(Guid addOnId, IEnumerable<TenantAddressMap> addressMaps, bool autoSave = false, CancellationToken cancellationToken = default);
 
-        Task RemoveAddressMapsAsync(Guid addOnId, IEnumerable<Guid> addressMapIds, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task RemoveAddressMapsByMapIdsAsync(Guid addOnId, IEnumerable<Guid> addressMapIds, bool autoSave = false, CancellationToken cancellationToken = default);
 
         Task UpdateAddressMapAsync(Guid addOnId, Guid addressMapId,
            Action<TenantAddressMap> func, bool autoSave = false, CancellationToken cancellationToken = default);
 
         Task AddContactMapsAsync(Guid addOnId, IEnumerable<TenantConactMap> contactMaps, bool autoSave = false, CancellationToken cancellationToken = default);
 
-        Task RemoveContactMapsAsync(Guid addOnId, IEnumerable<Guid> contactMapIds, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task RemoveContactMapsByMapIdsAsync(Guid addOnId, IEnumerable<Guid> contactMapIds, bool autoSave = false, CancellationToken cancellationToken = default);
 
         Task UpdateContactMapAsync(Guid addOnId, Guid contactMapId,
             Action<TenantConactMap> func, bool autoSave = false, CancellationToken cancellationToken = default);
 
         Task AddPictureMapsAsync(Guid addOnId, IEnumerable<TenantPictureMap> pictureMaps, bool autoSave = false, CancellationToken cancellationToken = default);
 
-        Task RemovePictureMapsAsync(Guid addOnId, IEnumerable<Guid> pictureMapIds, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task RemovePictureMapsByMapIdsAsync(Guid addOnId, IEnumerable<Guid> pictureMapIds, bool autoSave = false, CancellationToken cancellationToken = default);
 
         Task UpdatePicutreMapAsync(Guid addOnId, Guid pictureMapId,
             Action<TenantPictureMap> func, bool autoSave = false, CancellationToken cancellationToken = default);
@@ -35,6 +35,8 @@ namespace PolpAbp.MultiTenancy.Domain.Repositories
                    string keyword = null,
                    bool includeDetails = false,
                    CancellationToken cancellationToken = default);
+        Task RemoveAddressMapsByAddressIdsAsync(Guid addOnId, IEnumerable<Guid> addressIds, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task RemoveContactMapsByContactIdsAsync(Guid addOnId, IEnumerable<Guid> contactIds, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task RemovePictureMapsByPictureIdsAsync(Guid addOnId, IEnumerable<Guid> pictureIds, bool autoSave = false, CancellationToken cancellationToken = default);
     }
 }
-

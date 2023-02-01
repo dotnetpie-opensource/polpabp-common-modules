@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using PolpAbp.MultiTenancy.Domain.Entities;
+using PolpAbp.MultiTenancy.Domain.Repositories;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PolpAbp.MultiTenancy.Domain.Entities;
-using PolpAbp.MultiTenancy.Domain.Repositories;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -30,11 +29,23 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
             }, autoSave, cancellationToken);
         }
 
-        public async Task RemoveAddressMapsAsync(Guid addOnId, IEnumerable<Guid> addressMapIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task RemoveAddressMapsByMapIdsAsync(Guid addOnId, IEnumerable<Guid> mapIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.AddressMaps, (entity) =>
             {
-                var candidates = entity.AddressMaps.Where(b => addressMapIds.Contains(b.Id));
+                var candidates = entity.AddressMaps.Where(b => mapIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.AddressMaps.Remove(c);
+                }
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task RemoveAddressMapsByAddressIdsAsync(Guid addOnId, IEnumerable<Guid> addressIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.AddressMaps, (entity) =>
+            {
+                var candidates = entity.AddressMaps.Where(b => addressIds.Contains(b.AddressId));
                 foreach (var c in candidates)
                 {
                     entity.AddressMaps.Remove(c);
@@ -60,11 +71,23 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
             }, autoSave, cancellationToken);
         }
 
-        public async Task RemoveContactMapsAsync(Guid addOnId, IEnumerable<Guid> contactMapIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task RemoveContactMapsByMapIdsAsync(Guid addOnId, IEnumerable<Guid> mapIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
-                var candidates = entity.ContactMaps.Where(b => contactMapIds.Contains(b.Id));
+                var candidates = entity.ContactMaps.Where(b => mapIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.ContactMaps.Remove(c);
+                }
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task RemoveContactMapsByContactIdsAsync(Guid addOnId, IEnumerable<Guid> contactIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
+            {
+                var candidates = entity.ContactMaps.Where(b => contactIds.Contains(b.ContactId));
                 foreach (var c in candidates)
                 {
                     entity.ContactMaps.Remove(c);
@@ -90,11 +113,23 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
             }, autoSave, cancellationToken);
         }
 
-        public async Task RemovePictureMapsAsync(Guid addOnId, IEnumerable<Guid> pictureMapIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task RemovePictureMapsByMapIdsAsync(Guid addOnId, IEnumerable<Guid> mapIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.PictureMaps, (entity) =>
             {
-                var candidates = entity.PictureMaps.Where(b => pictureMapIds.Contains(b.Id));
+                var candidates = entity.PictureMaps.Where(b => mapIds.Contains(b.Id));
+                foreach (var c in candidates)
+                {
+                    entity.PictureMaps.Remove(c);
+                }
+            }, autoSave, cancellationToken);
+        }
+
+        public async Task RemovePictureMapsByPictureIdsAsync(Guid addOnId, IEnumerable<Guid> pictureIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            await AddOrRemoveChildItemsAsync(addOnId, a => a.PictureMaps, (entity) =>
+            {
+                var candidates = entity.PictureMaps.Where(b => pictureIds.Contains(b.PictureId));
                 foreach (var c in candidates)
                 {
                     entity.PictureMaps.Remove(c);

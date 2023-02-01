@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using AutoMapper;
+﻿using AutoMapper;
 using PolpAbp.MultiTenancy.Domain.Entities;
 using PolpAbp.MultiTenancy.Dtos;
 
@@ -22,10 +21,10 @@ public class MultiTenancyApplicationAutoMapperProfile : Profile
         CreateMap<TenantAddressInputDto, TenantAddressMap>()
             .IgnoreSourceMissingProperties();
 
+        CreateMap<TenantConactMap, TenantContactOutputDto>();
+
         CreateMap<TenantContactInputDto, TenantConactMap>()
             .IgnoreSourceMissingProperties();
-
-        CreateMap<TenantConactMap, TenantContactOutputDto>();
 
         CreateMap<TenantPictureMapInputDto, TenantPictureMap>()
             .ForMember(dst => dst.PictureRole, o => o.Ignore())
