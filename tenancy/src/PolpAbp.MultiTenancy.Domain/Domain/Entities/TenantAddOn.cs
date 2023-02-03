@@ -67,7 +67,7 @@ namespace PolpAbp.MultiTenancy.Domain.Entities
         #endregion
 
         // Lazy load
-        public virtual List<TenantConactMap> ContactMaps { get; set; }
+        public virtual List<TenantContactMap> ContactMaps { get; set; }
         public virtual List<TenantAddressMap> AddressMaps { get; set; }
         public virtual List<TenantPictureMap> PictureMaps { get; set; }
 

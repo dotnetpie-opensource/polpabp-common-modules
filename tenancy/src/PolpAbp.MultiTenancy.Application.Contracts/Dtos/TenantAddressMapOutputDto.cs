@@ -4,7 +4,7 @@ using Volo.Abp.Auditing;
 
 namespace PolpAbp.MultiTenancy.Dtos
 {
-    public class TenantAddressOutputDto : TenantAddressInputDto, IHasCreationTime, IEntityDto<Guid>, IHasModificationTime
+    public class TenantAddressMapOutputDto : TenantAddressMapInputDto, IHasCreationTime, IEntityDto<Guid>, IHasModificationTime
     {
         public DateTime CreationTime { get; set; }
 

@@ -16,9 +16,29 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
     public class EfCoreTenantAddOnRepository : PolpAbpEfCoreRepository<IMultiTenancyDbContext, TenantAddOn>,
         ITenantAddOnRepository
     {
+
         public EfCoreTenantAddOnRepository(IDbContextProvider<IMultiTenancyDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
+        }
+
+        public async Task<TenantAddOn> FindByTenantIdAsync(Guid tenantId)
+        {
+            var query = await WithDetailsAsync();
+            var entity = query.Where(x => x.TenantId == tenantId).FirstOrDefault();
+            return entity;
+        }
+
+        public async Task<Guid> EnsureForTenantIdAsync(Guid tenantId, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            var query = await GetQueryableAsync();
+            var entity = query.Where(x => x.TenantId == tenantId).FirstOrDefault();
+            if (entity == null)
+            {
+                entity = new TenantAddOn(GuidGenerator.Create()) { TenantId = tenantId };
+                await InsertAsync(entity, autoSave, cancellationToken);
+            }
+            return entity.Id;
         }
 
         public async Task AddAddressMapsAsync(Guid addOnId, IEnumerable<TenantAddressMap> addressMaps, bool autoSave = false, CancellationToken cancellationToken = default)
@@ -63,7 +83,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
             }, autoSave, cancellationToken);
         }
 
-        public async Task AddContactMapsAsync(Guid addOnId, IEnumerable<TenantConactMap> contactMaps, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task AddContactMapsAsync(Guid addOnId, IEnumerable<TenantContactMap> contactMaps, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
@@ -96,7 +116,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         }
 
         public async Task UpdateContactMapAsync(Guid addOnId, Guid contactMapId,
-            Action<TenantConactMap> func, bool autoSave = false, CancellationToken cancellationToken = default)
+            Action<TenantContactMap> func, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             await UpdateChildItemAsync(addOnId, a => a.ContactMaps, (entity) =>
             {

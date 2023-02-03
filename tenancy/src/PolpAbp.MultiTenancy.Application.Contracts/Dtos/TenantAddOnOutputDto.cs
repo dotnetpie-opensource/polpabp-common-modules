@@ -13,7 +13,18 @@ namespace PolpAbp.MultiTenancy.Dtos
 
         public Guid Id { get; set; }
 
-        public List<TenantAddressOutputDto> Addresses { get; set; }
+        public List<TenantAddressMapOutputDto> AddresseMaps { get; set; }
+
+        public List<TenantContactMapOutputDto> ContactMaps { get; set; }
+
+        public List<TenantPictureMapOutputDto> PictureMaps { get; set; }
+
+        public TenantAddOnOutputDto()
+        {
+            AddresseMaps= new List<TenantAddressMapOutputDto>();
+            ContactMaps= new List<TenantContactMapOutputDto>();
+            PictureMaps= new List<TenantPictureMapOutputDto>();
+        }
     }
 }
 

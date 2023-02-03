@@ -1,16 +1,12 @@
 ﻿using System;
-
 namespace PolpAbp.MultiTenancy.Dtos
 {
-    public class TenantAddressInputDto
+    public class TenantContactMapInputDto
     {
-        public Guid AddressId { get; set; }
-
+        public Guid ContactId { get; set; }
         public bool IsPrimary { get; set; }
-
-        public bool IsBillingAddress { get; set; }
-
         public int DisplayOrder { get; set; }
+
     }
 }
 

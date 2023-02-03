@@ -12,18 +12,20 @@ public class MultiTenancyApplicationAutoMapperProfile : Profile
             .IgnoreSourceMissingProperties();
 
         CreateMap<TenantAddOn, TenantAddOnOutputDto>()
-            .ForMember(dst => dst.Addresses, o => o.Ignore());
+            .ForMember(dst => dst.AddresseMaps, o => o.Ignore())
+            .ForMember(dst => dst.ContactMaps, o => o.Ignore())
+            .ForMember(dst => dst.PictureMaps, o => o.Ignore());
 
         CreateMap<TenantAddOnOutputDto, TenantAddOnInputDto>();
 
-        CreateMap<TenantAddressMap, TenantAddressOutputDto>();
+        CreateMap<TenantAddressMap, TenantAddressMapOutputDto>();
 
-        CreateMap<TenantAddressInputDto, TenantAddressMap>()
+        CreateMap<TenantAddressMapInputDto, TenantAddressMap>()
             .IgnoreSourceMissingProperties();
 
-        CreateMap<TenantConactMap, TenantContactOutputDto>();
+        CreateMap<TenantContactMap, TenantContactMapOutputDto>();
 
-        CreateMap<TenantContactInputDto, TenantConactMap>()
+        CreateMap<TenantContactMapInputDto, TenantContactMap>()
             .IgnoreSourceMissingProperties();
 
         CreateMap<TenantPictureMapInputDto, TenantPictureMap>()

@@ -26,7 +26,7 @@ public static class MultiTenancyDbContextModelCreatingExtensions
             b.HasIndex(q => q.TenantId).IsUnique();
 
             b.HasMany<TenantAddressMap>(x => x.AddressMaps).WithOne().HasForeignKey(p => p.TenantId);
-            b.HasMany<TenantConactMap>(x => x.ContactMaps).WithOne().HasForeignKey(p => p.TenantId);
+            b.HasMany<TenantContactMap>(x => x.ContactMaps).WithOne().HasForeignKey(p => p.TenantId);
             b.HasMany<TenantPictureMap>(x => x.PictureMaps).WithOne().HasForeignKey(p => p.TenantId);
         });
 
@@ -41,7 +41,7 @@ public static class MultiTenancyDbContextModelCreatingExtensions
             b.HasIndex(x => x.AddressId).IsUnique();
         });
 
-        builder.Entity<TenantConactMap>(b =>
+        builder.Entity<TenantContactMap>(b =>
         {
             //Configure table & schema name
             b.ToTable(MultiTenancyDbProperties.DbTablePrefix + MultiTenancyDbProperties.TenantContactMapTableName, MultiTenancyDbProperties.DbSchema);

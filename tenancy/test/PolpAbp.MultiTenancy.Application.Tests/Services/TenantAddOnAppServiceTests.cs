@@ -17,7 +17,7 @@ namespace PolpAbp.MultiTenancy.Services
         async Task CanCreateAsync()
         {
             var oldId = Guid.NewGuid();
-            var newId = await _appService.CreateAsync(new Dtos.TenantAddOnInputDto
+            var newId = await _appService.CreateOrUpdateAsync(new Dtos.TenantAddOnInputDto
             {
                 DisplayName = "hello",
                 Description = "world"

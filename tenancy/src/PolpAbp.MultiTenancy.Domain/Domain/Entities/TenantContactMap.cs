@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace PolpAbp.MultiTenancy.Domain.Entities
 {
-    public class TenantConactMap : Entity<Guid>, IHasCreationTime, IHasDeletionTime, IHasModificationTime
+    public class TenantContactMap : Entity<Guid>, IHasCreationTime, IHasDeletionTime, IHasModificationTime
     {
         // May refer to another datatable.
         public Guid ContactId { get; set; }
@@ -25,11 +25,11 @@ namespace PolpAbp.MultiTenancy.Domain.Entities
         public Guid TenantId { get; set; }
 
 
-        protected TenantConactMap() : base()
+        protected TenantContactMap() : base()
         {
         }
 
-        public TenantConactMap(Guid id) : base(id)
+        public TenantContactMap(Guid id) : base(id)
         {
         }
     }
