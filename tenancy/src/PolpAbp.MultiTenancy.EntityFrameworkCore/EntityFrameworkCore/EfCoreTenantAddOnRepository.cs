@@ -22,6 +22,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
         }
 
+        // Used when tenant is not set.
         public async Task<TenantAddOn> FindByTenantIdAsync(Guid tenantId)
         {
             var query = await WithDetailsAsync();
@@ -29,6 +30,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
             return entity;
         }
 
+        // Used when tenant is not set.
         public async Task<Guid> EnsureForTenantIdAsync(Guid tenantId, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var query = await GetQueryableAsync();

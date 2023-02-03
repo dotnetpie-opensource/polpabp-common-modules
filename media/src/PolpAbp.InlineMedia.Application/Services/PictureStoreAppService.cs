@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using PolpAbp.InlineMedia.Domain.Entities;
+﻿using PolpAbp.InlineMedia.Domain.Entities;
 using PolpAbp.InlineMedia.Dtos;
 using Polpware.AspNetCore.Framework;
-using Polpware.NetStd.Framework.IO;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.MultiTenancy;
 
 namespace PolpAbp.InlineMedia.Services
 {
@@ -62,6 +61,24 @@ namespace PolpAbp.InlineMedia.Services
 
             ObjectMapper.Map<PictureInputDto, Picture>(dto, picture);
             await _pictureRepository.UpdateAsync(picture, autoSave, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets a picture just by the given Id.
+        /// </summary>
+        /// <param name="id">Picture identifier</param>
+        /// <returns>Picture</returns>
+        public virtual async Task<PictureOutputDto> GetByIdBeyondTenantAsync(Guid id)
+        {
+            using (DataFilter.Disable<IMultiTenant>())
+            {
+                // Will throw an exception if no any item is found.
+                var picture = await _pictureRepository.GetAsync(x => x.Id == id);
+
+                var ret = ObjectMapper.Map<Picture, PictureOutputDto>(picture);
+
+                return ret;
+            }
         }
 
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.MultiTenancy;
 
 namespace PolpAbp.MultiTenancy.Services
 {
@@ -20,12 +21,15 @@ namespace PolpAbp.MultiTenancy.Services
             _tenantAddOnRepository = tenantAddOnRepository;
         }
 
-        public async Task<TenantAddOnOutputDto> GetAsync(Guid tenantId, CancellationToken cancellationToken = default)
+        public async Task<TenantAddOnOutputDto> GetBeyondTenantAsync(Guid tenantId, CancellationToken cancellationToken = default)
         {
-            var id = await _tenantAddOnRepository.EnsureForTenantIdAsync(tenantId, autoSave: true, cancellationToken: cancellationToken);
-            var entry = await _tenantAddOnRepository.GetAsync(id, includeDetails: true, cancellationToken: cancellationToken);
-            var dto = BuildDto(entry);
-            return dto;
+            using (DataFilter.Disable<IMultiTenant>())
+            {
+                var id = await _tenantAddOnRepository.EnsureForTenantIdAsync(tenantId, autoSave: true, cancellationToken: cancellationToken);
+                var entry = await _tenantAddOnRepository.GetAsync(id, includeDetails: true, cancellationToken: cancellationToken);
+                var dto = BuildDto(entry);
+                return dto;
+            }
         }
 
         public async Task<Guid> CreateOrUpdateAsync(TenantAddOnInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)

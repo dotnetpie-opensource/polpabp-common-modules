@@ -12,6 +12,7 @@ namespace PolpAbp.InlineMedia.Services
         Task<PictureOutputDto> GetByIdAsync(Guid id);
         Task<PictureOutputDto> FindByIdAsync(Guid id);
         Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task<PictureOutputDto> GetByIdBeyondTenantAsync(Guid id);
     }
 }
 
