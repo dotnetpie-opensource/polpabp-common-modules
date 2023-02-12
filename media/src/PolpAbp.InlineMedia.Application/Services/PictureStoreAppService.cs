@@ -68,12 +68,12 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="id">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual async Task<PictureOutputDto> GetByIdBeyondTenantAsync(Guid id)
+        public virtual async Task<PictureOutputDto> GetByIdBeyondTenantAsync(Guid id, CancellationToken cancellationToken = default)
         {
             using (DataFilter.Disable<IMultiTenant>())
             {
                 // Will throw an exception if no any item is found.
-                var picture = await _pictureRepository.GetAsync(x => x.Id == id);
+                var picture = await _pictureRepository.GetAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
                 var ret = ObjectMapper.Map<Picture, PictureOutputDto>(picture);
 
@@ -87,10 +87,10 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="id">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual async Task<PictureOutputDto> GetByIdAsync(Guid id)
+        public virtual async Task<PictureOutputDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             // Will throw an exception if no any item is found.
-            var picture = await _pictureRepository.GetAsync(x => x.Id == id);
+            var picture = await _pictureRepository.GetAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
             var ret = ObjectMapper.Map<Picture, PictureOutputDto>(picture);
 
@@ -102,10 +102,10 @@ namespace PolpAbp.InlineMedia.Services
         /// </summary>
         /// <param name="id">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual async Task<PictureOutputDto> FindByIdAsync(Guid id)
+        public virtual async Task<PictureOutputDto> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             // Will throw an exception if no any item is found.
-            var picture = await _pictureRepository.FindAsync(x => x.Id == id);
+            var picture = await _pictureRepository.FindAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
             if (picture == null)
             {

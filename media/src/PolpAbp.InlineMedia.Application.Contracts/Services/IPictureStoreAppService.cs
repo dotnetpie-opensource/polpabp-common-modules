@@ -9,10 +9,10 @@ namespace PolpAbp.InlineMedia.Services
     {
         Task<Guid> CreateAsync(PictureInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default);
         Task UpdateAsync(Guid id, PictureInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default);
-        Task<PictureOutputDto> GetByIdAsync(Guid id);
-        Task<PictureOutputDto> FindByIdAsync(Guid id);
+        Task<PictureOutputDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<PictureOutputDto> FindByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default);
-        Task<PictureOutputDto> GetByIdBeyondTenantAsync(Guid id);
+        Task<PictureOutputDto> GetByIdBeyondTenantAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
 
