@@ -1,5 +1,4 @@
-﻿using PolpAbp.ResourceManagement.Core;
-using System;
+﻿using System;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace PolpAbp.ResourceManagement.Domain.Entities
@@ -12,10 +11,6 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
 
         public long LimitAcrossTenant { get; set;}
         public long LimitPerUser { get; set;}
-
-        // Navigation
-        public virtual Plan Plan { get; set;}
-        public virtual Resource Resource { get; set;}
 
         protected PlanBreakdown() :base() { }
 

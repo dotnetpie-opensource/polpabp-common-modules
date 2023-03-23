@@ -46,8 +46,9 @@ public static class ResourceManagementDbContextModelCreatingExtensions
             b.ConfigureByConvention();
             //Properties
             b.HasOne(x => x.Resource).WithMany()
-            .HasForeignKey(p => p.ResourceId);
-            // .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(p => p.ResourceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
             if (usageLogBuilder != null)
             {
                 usageLogBuilder(b);
@@ -81,6 +82,7 @@ public static class ResourceManagementDbContextModelCreatingExtensions
             b.HasOne(x => x.Resource).WithMany()
             .HasForeignKey(p => p.ResourceId)
             .OnDelete(DeleteBehavior.Restrict);
+
             // Indices
             b.HasIndex(x => new { x.TenantId, x.ResourceId, x.Year })
             .IsUnique();
@@ -100,10 +102,6 @@ public static class ResourceManagementDbContextModelCreatingExtensions
 
             b.Property(q => q.Description)
             .HasMaxLength(ResourceManagementDomainConsts.MaxPlanDescLength); 
-            // Navigators
-            b.HasMany(x => x.Breakdowns)
-            .WithOne().HasForeignKey(p => p.PlanId);
-
             // Indices 
             b.HasIndex(x => x.Name).IsUnique();
         });
@@ -117,9 +115,13 @@ public static class ResourceManagementDbContextModelCreatingExtensions
             b.ConfigureByConvention();
 
             // Navigators
-            b.HasOne(x => x.Resource)
+            b.HasOne<Resource>()
             .WithMany().HasForeignKey(p => p.ResourceId);
+
             // Plan has been configured above.
+            b.HasOne<Plan>()
+            .WithMany(y => y.Breakdowns)
+            .HasForeignKey(p => p.PlanId);
         });
 
         builder.Entity<TenantSubscription>(b =>
@@ -132,7 +134,9 @@ public static class ResourceManagementDbContextModelCreatingExtensions
 
             // Navigators
             b.HasOne(x => x.Plan)
-            .WithMany().HasForeignKey(p => p.PlanId);
+            .WithMany()
+            .HasForeignKey(p => p.PlanId)
+            .OnDelete(DeleteBehavior.Restrict);
         });
 
     }
