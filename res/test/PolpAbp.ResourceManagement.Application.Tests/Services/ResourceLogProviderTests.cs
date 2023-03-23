@@ -1,0 +1,179 @@
+﻿using PolpAbp.ResourceManagement.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.MultiTenancy;
+using Xunit;
+
+namespace PolpAbp.ResourceManagement.Services
+{
+    public class ResourceLogProviderTests : ResourceManagementApplicationTestBase
+    {
+        private IResourceLogProvider _resourceLogProvider;
+        private ICurrentTenant _currentTenant;
+        private IRepository<ResourceMonthlyUsage> _monthlyUsageRepository;
+        private IRepository<ResourceYearlyUsage> _yearlyUsageRepository;
+        private IRepository<Resource> _resourceRepository;
+
+        public ResourceLogProviderTests()
+        {
+
+            _resourceLogProvider = GetRequiredService<IResourceLogProvider>();
+            _currentTenant = GetRequiredService<ICurrentTenant>();
+            _monthlyUsageRepository = GetRequiredService<IRepository<ResourceMonthlyUsage>>();
+            _yearlyUsageRepository = GetRequiredService<IRepository<ResourceYearlyUsage>>();
+            _resourceRepository = GetRequiredService<IRepository<Resource>>();
+        }
+
+        [Fact]
+        public async Task CanStoreAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var info = new ResourceLogInfo()
+                    {
+                        ResourceName = ResourceManagementTestConsts.SmsResourceName,
+                        TenantId = ResourceManagementTestConsts.TenantId,
+                        UserId = ResourceManagementTestConsts.AdminId,
+                        HappenedOn = DateTime.UtcNow,
+                        Usage = 1
+                    };
+                    await _resourceLogProvider.StoreAsync(info);
+
+                    Assert.True(true);
+                });
+            }
+        }
+
+        [Fact]
+        public async Task CanCountCurrentUsageAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var info = new ResourceLogInfo()
+                    {
+                        ResourceName = ResourceManagementTestConsts.SmsResourceName,
+                        TenantId = ResourceManagementTestConsts.TenantId,
+                        UserId = ResourceManagementTestConsts.AdminId,
+                        HappenedOn = DateTime.UtcNow,
+                        Usage = 1
+                    };
+                    await _resourceLogProvider.StoreAsync(info);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+
+                    var a = await _resourceLogProvider.CountCurrentUsageAsync(
+                        ResourceManagementTestConsts.SmsResourceName,
+                        null,
+                        DateTime.UtcNow.Subtract(new TimeSpan(48, 0, 0)),
+                            null);
+
+                    Assert.Equal(1, a);
+                });
+            }
+        }
+
+        [Fact]
+        public async Task CanGetMonthlyUsageAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var resource = await _resourceRepository
+                    .GetAsync(x => x.Name == ResourceManagementTestConsts.SmsResourceName);
+                    await _monthlyUsageRepository.InsertAsync(
+                        new ResourceMonthlyUsage(Guid.NewGuid())
+                        {
+                            ResourceId = resource.Id,
+                            Year = 2023,
+                            Month = 1,
+                            Usage = 55
+                        });
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+
+                    var b = await _resourceLogProvider
+                    .GetMonthlyUsageAsync(ResourceManagementTestConsts.SmsResourceName,
+                        2023, 1);
+
+                    Assert.Equal(55, b);
+                });
+            }
+        }
+
+
+        [Fact]
+        public async Task CanGetYearlyUsageAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var resource = await _resourceRepository
+                    .GetAsync(x => x.Name == ResourceManagementTestConsts.SmsResourceName);
+
+                    await _yearlyUsageRepository.InsertAsync(
+                        new ResourceYearlyUsage(Guid.NewGuid())
+                        {
+                            ResourceId = resource.Id,
+                            Year = 2023,
+                            Usage = 2023
+                        });
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+
+                    var b = await _resourceLogProvider
+                    .GetYearlyUsageAsync(ResourceManagementTestConsts.SmsResourceName,
+                        2023);
+
+                    Assert.Equal(2023, b);
+                });
+            }
+        }
+
+        [Fact]
+        public async Task CanGetUsageInChainWayAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var info = new ResourceLogInfo()
+                    {
+                        ResourceName = ResourceManagementTestConsts.SmsResourceName,
+                        TenantId = ResourceManagementTestConsts.TenantId,
+                        UserId = ResourceManagementTestConsts.AdminId,
+                        HappenedOn = DateTime.UtcNow,
+                        Usage = 100
+                    };
+                    await _resourceLogProvider.StoreAsync(info);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+
+                    var b = await _resourceLogProvider
+                    .GetYearlyUsageAsync(ResourceManagementTestConsts.SmsResourceName,
+                        DateTime.UtcNow.Year);
+
+                    Assert.Equal(100, b);
+                });
+            }
+        }
+
+    }
+}
