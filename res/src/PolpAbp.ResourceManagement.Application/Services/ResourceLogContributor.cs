@@ -37,6 +37,10 @@ namespace PolpAbp.ResourceManagement.Services
                 Usage = resourceLogInfo.Usage,
                 UserId = resourceLogInfo.UserId,
                 TenantId = resourceLogInfo.TenantId,
+                Intension = resourceLogInfo.Intension,
+                IsExempt = resourceLogInfo.IsExempt,
+                ExemptionReason = resourceLogInfo.ExemptionReason,
+                Destination = resourceLogInfo.Destination,
                 CreationTime = resourceLogInfo.HappenedOn
             };
 
@@ -49,7 +53,7 @@ namespace PolpAbp.ResourceManagement.Services
 
             var query = await UsageLogRepository.GetQueryableAsync();
             var amount = query
-                .Where(x => x.ResourceId == resourceEntry.Id && x.CreationTime >= StartedOn)
+                .Where(x => x.ResourceId == resourceEntry.Id && !x.IsExempt && x.CreationTime >= StartedOn)
                 .WhereIf(userId.HasValue, w => w.UserId == userId.Value)
                 .WhereIf(EndedOn.HasValue, y => y.CreationTime < EndedOn)
                 .Select(z => z.Usage)
