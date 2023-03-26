@@ -49,6 +49,10 @@ public static class ResourceManagementDbContextModelCreatingExtensions
             .HasForeignKey(p => p.ResourceId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            b.Property(x => x.Intension).HasMaxLength(ResourceManagementDomainConsts.MaxGenenalStringLength);
+            b.Property(x => x.ExemptionReason).HasMaxLength(ResourceManagementDomainConsts.MaxGenenalStringLength);
+            b.Property(x => x.Destination).HasMaxLength(ResourceManagementDomainConsts.MaxGenenalStringLength);
+
             if (usageLogBuilder != null)
             {
                 usageLogBuilder(b);
