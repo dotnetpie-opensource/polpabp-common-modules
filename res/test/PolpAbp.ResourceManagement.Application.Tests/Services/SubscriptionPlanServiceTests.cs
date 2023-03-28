@@ -74,14 +74,12 @@ namespace PolpAbp.ResourceManagement.Services
                     var tenantQuota = await _subscriptionPlanService
                     .GetQuotaAsync(ResourceManagementTestConsts.SmsResourceName, true);
 
-                    Assert.True(tenantQuota.HasValue);
-                    Assert.Equal(10000, tenantQuota.Value);
+                    Assert.Equal(10000, tenantQuota);
 
                     var userQuota = await _subscriptionPlanService
                     .GetQuotaAsync(ResourceManagementTestConsts.SmsResourceName, false);
 
-                    Assert.True(userQuota.HasValue);
-                    Assert.Equal(1000, userQuota.Value);
+                    Assert.Equal(1000, userQuota);
 
                 });
             }
