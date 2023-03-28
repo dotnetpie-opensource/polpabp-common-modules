@@ -1,4 +1,6 @@
-﻿using PolpAbp.ResourceManagement.Core;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using PolpAbp.ResourceManagement.Core;
 using PolpAbp.ResourceManagement.Domain.Entities;
 using System;
 using System.Linq;
@@ -14,14 +16,18 @@ namespace PolpAbp.ResourceManagement.Services
     {
         private readonly IRepository<TenantSubscription> _subscriptionRepository;
         private readonly IRepository<Resource> _resourceRepository;
+        private readonly ResourceLogOptions _options;
 
-        public SubscriptionPlanService(IRepository<TenantSubscription> subscriptionRepository, IRepository<Resource> resourceRepository)
+        public SubscriptionPlanService(IRepository<TenantSubscription> subscriptionRepository, 
+            IRepository<Resource> resourceRepository,
+            IOptions<ResourceLogOptions> options)
         {
             _subscriptionRepository = subscriptionRepository;
             _resourceRepository = resourceRepository;
+            _options = options.Value;
         }
 
-        public async Task<long?> GetQuotaAsync(string resourceName, bool isTenantLevel)
+        public async Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel)
         {
             // Require the resource id 
             var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName);
@@ -43,7 +49,14 @@ namespace PolpAbp.ResourceManagement.Services
                 return isTenantLevel ? breakdown.LimitAcrossTenant : breakdown.LimitPerUser;
             }
 
-            return null;
+            // Read the configuration 
+            var anyCfg = _options.FreeMonthlyUsageLimit.FirstOrDefault(x => x.ResourceName == resourceName);
+            if (anyCfg != null)
+            {
+                return isTenantLevel ? anyCfg.LimitAcrossTenant : anyCfg.LimitPerUser;
+            }
+
+            return 0;
         }
 
         public async Task<Tuple<DateTime, DateTime?>> GetCurrentBillingPeriodAsync(string resourceName)
@@ -62,7 +75,12 @@ namespace PolpAbp.ResourceManagement.Services
                 return ComputeBillingDateRange(entry.BillingCycleOn, entry.Plan.BillingCycle, now);
             }
 
-            throw new Exception("Plan not defined yet");
+            // Fall back to the configured monthly plan.
+            // Get the calendar month 
+            var startingMonth = new DateTime(now.Year, now.Month, 1);
+            var endMonth = startingMonth.AddMonths(1);
+
+            return Tuple.Create<DateTime, DateTime?>(startingMonth, endMonth);
         }
 
         private Tuple<DateTime, DateTime?> ComputeBillingDateRange(DateTime cycleOn, BillingCycleEnum cycle, DateTime referenceTime)
@@ -89,7 +107,8 @@ namespace PolpAbp.ResourceManagement.Services
             }
 
             throw new Exception("Wrong cycle");
-        } 
+        }
+        
 
         private DateTime? GetRangeEndDate(BillingCycleEnum cycle, DateTime startDate)
         {            
