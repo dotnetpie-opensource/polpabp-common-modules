@@ -15,12 +15,22 @@ namespace PolpAbp.ResourceManagement.Services
         
         public abstract string ResourceName { get; }
 
-        protected IRepository<ResourceUsageLog> UsageLogRepository => LazyServiceProvider.LazyGetRequiredService<IRepository<ResourceUsageLog>>();
-        protected IRepository<ResourceMonthlyUsage> MonthlyUsageRepository => LazyServiceProvider.LazyGetRequiredService<IRepository<ResourceMonthlyUsage>>();
-        protected IRepository<ResourceYearlyUsage> YearlyUsageRepository => LazyServiceProvider.LazyGetRequiredService<IRepository<ResourceYearlyUsage>>();
+        protected readonly IRepository<ResourceUsageLog, Guid> UsageLogRepository;
+        protected readonly IRepository<ResourceMonthlyUsage, Guid> MonthlyUsageRepository;
+        protected readonly IRepository<ResourceYearlyUsage, Guid> YearlyUsageRepository;
 
-        protected IRepository<Resource> ResourceRepository => LazyServiceProvider.LazyGetRequiredService<IRepository<Resource>> ();
+        protected IRepository<Resource, Guid> ResourceRepository => LazyServiceProvider.LazyGetRequiredService<IRepository<Resource, Guid>> ();
         protected IGuidGenerator GuidGenerator => LazyServiceProvider.LazyGetRequiredService<IGuidGenerator>();
+
+
+        public ResourceLogContributor(IRepository<ResourceUsageLog, Guid> usageLogRepo,
+                IRepository<ResourceMonthlyUsage, Guid> monthlyUsageRepo,
+                IRepository<ResourceYearlyUsage, Guid> yearlyUsageRepo)
+        {
+            UsageLogRepository = usageLogRepo;
+            MonthlyUsageRepository = monthlyUsageRepo;
+            YearlyUsageRepository = yearlyUsageRepo;
+        }
 
         public virtual async Task StoreAsync(ResourceLogInfo resourceLogInfo, bool autoSave = false)
         {

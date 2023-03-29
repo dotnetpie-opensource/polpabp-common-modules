@@ -14,12 +14,12 @@ namespace PolpAbp.ResourceManagement.Services
     [RemoteService(false)]
     public class SubscriptionPlanService : ISubscriptionPlanService, ITransientDependency
     {
-        private readonly IRepository<TenantSubscription> _subscriptionRepository;
-        private readonly IRepository<Resource> _resourceRepository;
+        private readonly IRepository<TenantSubscription, Guid> _subscriptionRepository;
+        private readonly IRepository<Resource, Guid> _resourceRepository;
         private readonly ResourceLogOptions _options;
 
-        public SubscriptionPlanService(IRepository<TenantSubscription> subscriptionRepository, 
-            IRepository<Resource> resourceRepository,
+        public SubscriptionPlanService(IRepository<TenantSubscription, Guid> subscriptionRepository, 
+            IRepository<Resource, Guid> resourceRepository,
             IOptions<ResourceLogOptions> options)
         {
             _subscriptionRepository = subscriptionRepository;
