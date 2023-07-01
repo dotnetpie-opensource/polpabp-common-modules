@@ -50,7 +50,7 @@ namespace PolpAbp.ResourceManagement.Services
             }
 
             // Read the configuration 
-            var anyCfg = _options.FreeMonthlyUsageLimit.FirstOrDefault(x => x.ResourceName == resourceName);
+            var anyCfg = _options.FreeUsageLimit.FirstOrDefault(x => x.ResourceName == resourceName);
             if (anyCfg != null)
             {
                 return isTenantLevel ? anyCfg.LimitAcrossTenant : anyCfg.LimitPerUser;

@@ -15,6 +15,15 @@ namespace PolpAbp.ResourceManagement.Services
         private readonly ISubscriptionPlanService _subscriptionPlanService;
         private readonly IDistributedCache<ResourceUsageCacheItem> _cache;
 
+        public ResourceUsageQueryService(IResourceLogProvider resourceLogProvider,
+            ISubscriptionPlanService subscriptionPlanService,
+            IDistributedCache<ResourceUsageCacheItem> cache)
+        {
+            _resourceLogProvider = resourceLogProvider;
+            _subscriptionPlanService = subscriptionPlanService;
+            _cache = cache;
+        }
+
         public async Task<ResourceUsageCacheItem> GetResourceUsageAsync(string resourceName, 
             string cacheKey,
             int expiredInMins = 10, bool forceReload = false,

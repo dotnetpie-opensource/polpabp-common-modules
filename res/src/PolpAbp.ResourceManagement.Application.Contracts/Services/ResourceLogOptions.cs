@@ -9,12 +9,12 @@ namespace PolpAbp.ResourceManagement.Services
 
         public Dictionary<string, Type> Contributors { get; }
 
-        public List<ResourceUsageLimit> FreeMonthlyUsageLimit { get; set; }
+        public List<ResourceUsageLimit> FreeUsageLimit { get; set; }
 
         public ResourceLogOptions() {
             IsEnabled = true;
             Contributors = new Dictionary<string, Type>();
-            FreeMonthlyUsageLimit = new List<ResourceUsageLimit>();
+            FreeUsageLimit = new List<ResourceUsageLimit>();
         }
     }
 }
