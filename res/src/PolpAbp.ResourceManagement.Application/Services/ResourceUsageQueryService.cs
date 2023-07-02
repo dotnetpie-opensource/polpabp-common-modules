@@ -38,10 +38,10 @@ namespace PolpAbp.ResourceManagement.Services
               cacheKey,
               async () =>
               {
-                  var quota = await _subscriptionPlanService.GetQuotaAsync(resourceName, true);
+                  var quota = await _subscriptionPlanService.GetQuotaAsync(resourceName, true, cancellationToken: cancellationToken);
                   // Get the usage 
-                  var curBillingCycle = await _subscriptionPlanService.GetCurrentBillingPeriodAsync(resourceName);
-                  var usage = await _resourceLogProvider.CountCurrentUsageAsync(resourceName, null, curBillingCycle.Item1, curBillingCycle.Item2);
+                  var curBillingCycle = await _subscriptionPlanService.GetCurrentBillingPeriodAsync(resourceName, cancellationToken: cancellationToken);
+                  var usage = await _resourceLogProvider.CountCurrentUsageAsync(resourceName, null, curBillingCycle.Item1, curBillingCycle.Item2, cancellationToken: cancellationToken);
 
                   return new ResourceUsageCacheItem
                   {

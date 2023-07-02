@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PolpAbp.ResourceManagement.Services
@@ -7,11 +8,11 @@ namespace PolpAbp.ResourceManagement.Services
     {
         string ResourceName { get; }
 
-        Task<long> CountCurrentUsageAsync(Guid? userId, DateTime StartedOn, DateTime? EndedOn);
-        Task<long> GetMonthlyUsageAsync(int year, int month);
-        Task<long> GetYearlyUsageAsync(int year);
+        Task<long> CountCurrentUsageAsync(Guid? userId, DateTime StartedOn, DateTime? EndedOn, CancellationToken cancellationToken);
+        Task<long> GetMonthlyUsageAsync(int year, int month, CancellationToken cancellationToken);
+        Task<long> GetYearlyUsageAsync(int year, CancellationToken cancellationToken);
 
         // Storing 
-        Task StoreAsync(ResourceLogInfo resourceLogInfo, bool autoSave = false);
+        Task StoreAsync(ResourceLogInfo resourceLogInfo, CancellationToken cancellationToken, bool autoSave = false);
     }
 }

@@ -4,6 +4,7 @@ using PolpAbp.ResourceManagement.Core;
 using PolpAbp.ResourceManagement.Domain.Entities;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
@@ -27,10 +28,10 @@ namespace PolpAbp.ResourceManagement.Services
             _options = options.Value;
         }
 
-        public async Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel)
+        public async Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken)
         {
             // Require the resource id 
-            var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName);
+            var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName, cancellationToken: cancellationToken);
 
             // Next 
             var query = await _subscriptionRepository.WithDetailsAsync();
@@ -59,9 +60,9 @@ namespace PolpAbp.ResourceManagement.Services
             return 0;
         }
 
-        public async Task<Tuple<DateTime, DateTime?>> GetCurrentBillingPeriodAsync(string resourceName)
+        public async Task<Tuple<DateTime, DateTime?>> GetCurrentBillingPeriodAsync(string resourceName, CancellationToken cancellationToken)
         {
-            var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName);
+            var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName, cancellationToken: cancellationToken);
 
             // Next 
             var query = await _subscriptionRepository.WithDetailsAsync();

@@ -17,7 +17,8 @@ namespace PolpAbp.ResourceManagement.EventHandlers
 
         public async Task HandleEventAsync(ResourceLogInfo eventData)
         {
-            await _resourceLogProvider.StoreAsync(eventData);
+            // todo: Is there a way to get the cancellation token ...
+            await _resourceLogProvider.StoreAsync(eventData, default);
         }
     }
 }

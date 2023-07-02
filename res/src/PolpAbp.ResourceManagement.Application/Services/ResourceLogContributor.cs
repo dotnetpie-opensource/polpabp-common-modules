@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
@@ -32,14 +33,14 @@ namespace PolpAbp.ResourceManagement.Services
             YearlyUsageRepository = yearlyUsageRepo;
         }
 
-        public virtual async Task StoreAsync(ResourceLogInfo resourceLogInfo, bool autoSave = false)
+        public virtual async Task StoreAsync(ResourceLogInfo resourceLogInfo, CancellationToken cancellationToken, bool autoSave = false)
         {
             if (resourceLogInfo.ResourceName != ResourceName)
             {
                 throw new Exception("Resource not matched");
             }
 
-            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName);
+            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName, cancellationToken: cancellationToken);
 
             var entity = new ResourceUsageLog(GuidGenerator.Create())
             {
@@ -54,12 +55,12 @@ namespace PolpAbp.ResourceManagement.Services
                 CreationTime = resourceLogInfo.HappenedOn
             };
 
-            await UsageLogRepository.InsertAsync(entity, autoSave);
+            await UsageLogRepository.InsertAsync(entity, autoSave, cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<long> CountCurrentUsageAsync(Guid? userId, DateTime StartedOn, DateTime? EndedOn)
+        public virtual async Task<long> CountCurrentUsageAsync(Guid? userId, DateTime StartedOn, DateTime? EndedOn, CancellationToken cancellationToken)
         {
-            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName);
+            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName, cancellationToken: cancellationToken);
 
             var query = await UsageLogRepository.GetQueryableAsync();
             var amount = query
@@ -72,9 +73,9 @@ namespace PolpAbp.ResourceManagement.Services
             return amount;
         }
 
-        public virtual async Task<long> GetMonthlyUsageAsync(int year, int month)
+        public virtual async Task<long> GetMonthlyUsageAsync(int year, int month, CancellationToken cancellationToken)
         {
-            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName);
+            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName, cancellationToken: cancellationToken);
 
             var query = await MonthlyUsageRepository.GetQueryableAsync();
             var entry = query
@@ -90,14 +91,14 @@ namespace PolpAbp.ResourceManagement.Services
             {
                 var startDate = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
                 var endDate = startDate.AddMonths(1);
-                sum = await CountCurrentUsageAsync(null, startDate, endDate);
+                sum = await CountCurrentUsageAsync(null, startDate, endDate, cancellationToken);
             }
             return sum;
         }
 
-        public virtual async Task<long> GetYearlyUsageAsync(int year)
+        public virtual async Task<long> GetYearlyUsageAsync(int year, CancellationToken cancellationToken)
         {
-            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName);
+            var resourceEntry = await ResourceRepository.GetAsync(a => a.Name == ResourceName, cancellationToken: cancellationToken);
 
             var query = await YearlyUsageRepository.GetQueryableAsync();
             var entry = query
@@ -114,7 +115,7 @@ namespace PolpAbp.ResourceManagement.Services
                 // Find out the
                 for (var m = 1; m <= 12; m++)
                 {
-                    sum += await GetMonthlyUsageAsync(year, m);
+                    sum += await GetMonthlyUsageAsync(year, m, cancellationToken);
                 }
             }
             return sum;
