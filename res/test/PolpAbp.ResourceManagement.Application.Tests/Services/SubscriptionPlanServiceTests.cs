@@ -72,12 +72,12 @@ namespace PolpAbp.ResourceManagement.Services
                 await WithUnitOfWorkAsync(async () =>
                 {
                     var tenantQuota = await _subscriptionPlanService
-                    .GetQuotaAsync(ResourceManagementTestConsts.SmsResourceName, true);
+                    .GetQuotaAsync(ResourceManagementTestConsts.SmsResourceName, true, default);
 
                     Assert.Equal(10000, tenantQuota);
 
                     var userQuota = await _subscriptionPlanService
-                    .GetQuotaAsync(ResourceManagementTestConsts.SmsResourceName, false);
+                    .GetQuotaAsync(ResourceManagementTestConsts.SmsResourceName, false, default);
 
                     Assert.Equal(1000, userQuota);
 

@@ -43,7 +43,7 @@ namespace PolpAbp.ResourceManagement.Services
                         HappenedOn = DateTime.UtcNow,
                         Usage = 1
                     };
-                    await _resourceLogProvider.StoreAsync(info);
+                    await _resourceLogProvider.StoreAsync(info, default);
 
                     Assert.True(true);
                 });
@@ -65,7 +65,7 @@ namespace PolpAbp.ResourceManagement.Services
                         HappenedOn = DateTime.UtcNow,
                         Usage = 1
                     };
-                    await _resourceLogProvider.StoreAsync(info);
+                    await _resourceLogProvider.StoreAsync(info, default);
                 });
 
                 await WithUnitOfWorkAsync(async () =>
@@ -75,7 +75,8 @@ namespace PolpAbp.ResourceManagement.Services
                         ResourceManagementTestConsts.SmsResourceName,
                         null,
                         DateTime.UtcNow.Subtract(new TimeSpan(48, 0, 0)),
-                            null);
+                            null, 
+                            default);
 
                     Assert.Equal(1, a);
                 });
@@ -106,7 +107,7 @@ namespace PolpAbp.ResourceManagement.Services
 
                     var b = await _resourceLogProvider
                     .GetMonthlyUsageAsync(ResourceManagementTestConsts.SmsResourceName,
-                        2023, 1);
+                        2023, 1, default);
 
                     Assert.Equal(55, b);
                 });
@@ -138,7 +139,7 @@ namespace PolpAbp.ResourceManagement.Services
 
                     var b = await _resourceLogProvider
                     .GetYearlyUsageAsync(ResourceManagementTestConsts.SmsResourceName,
-                        2023);
+                        2023, default);
 
                     Assert.Equal(2023, b);
                 });
@@ -160,7 +161,7 @@ namespace PolpAbp.ResourceManagement.Services
                         HappenedOn = DateTime.UtcNow,
                         Usage = 100
                     };
-                    await _resourceLogProvider.StoreAsync(info);
+                    await _resourceLogProvider.StoreAsync(info, default);
                 });
 
                 await WithUnitOfWorkAsync(async () =>
@@ -168,7 +169,7 @@ namespace PolpAbp.ResourceManagement.Services
 
                     var b = await _resourceLogProvider
                     .GetYearlyUsageAsync(ResourceManagementTestConsts.SmsResourceName,
-                        DateTime.UtcNow.Year);
+                        DateTime.UtcNow.Year, default);
 
                     Assert.Equal(100, b);
                 });
