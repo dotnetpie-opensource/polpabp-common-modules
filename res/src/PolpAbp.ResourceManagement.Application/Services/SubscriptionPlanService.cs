@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 
 namespace PolpAbp.ResourceManagement.Services
@@ -45,6 +46,11 @@ namespace PolpAbp.ResourceManagement.Services
                 y.Name = elem.Plan.Name;
                 y.Description = elem.Plan.Description;
                 y.BillingCycleId = elem.Plan.BillingCycleId;
+
+                // Inferred properties
+                var u = ComputeBillingDateRange(elem.BillingCycleOn, elem.Plan.BillingCycle, now);
+                y.CurrentBillingStartDate = u.Item1;
+                y.CurrentBillingEndDate = u.Item2;
 
                 // Breakdows 
                 y.Breakdowns = elem.Plan.Breakdowns.Select(l =>

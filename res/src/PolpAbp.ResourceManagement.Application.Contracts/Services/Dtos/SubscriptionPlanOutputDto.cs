@@ -16,6 +16,10 @@ namespace PolpAbp.ResourceManagement.Services.Dtos
         public int Quantity { get; set; }
         public Guid PlanId { get; set; }
 
+        // Inferred properties
+        public DateTime CurrentBillingStartDate { get; set; }
+        public DateTime? CurrentBillingEndDate { get; set; }
+
         // From plan
         public string Name { get; set; }
         public string Description { get; set; }
