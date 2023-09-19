@@ -11,6 +11,8 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
 
         public Guid PlanId { get; set; }
 
+        public int Quantity { get; set; }
+
         public DateTime EffectiveOn { get; set; }
         public bool IsTerminated { get; set; }
         public DateTime? TerminatedOn { get; set; }
