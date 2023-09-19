@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PolpAbp.ResourceManagement.Services.Dtos;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,5 +10,6 @@ namespace PolpAbp.ResourceManagement.Services
     {
         Task<Tuple<DateTime, DateTime?>> GetCurrentBillingPeriodAsync(string resourceName, CancellationToken cancellationToken);
         Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken);
+        Task<List<SubscriptionPlanOutputDto>> LoadCurrentPlansAsync(CancellationToken cancellationToken);
     }
 }

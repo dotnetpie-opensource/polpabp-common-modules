@@ -3,6 +3,7 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
 using Volo.Abp.Caching;
+using PolpAbp.Framework;
 
 namespace PolpAbp.ResourceManagement;
 
@@ -11,7 +12,9 @@ namespace PolpAbp.ResourceManagement;
     typeof(ResourceManagementApplicationContractsModule),
     typeof(AbpDddApplicationModule),
     typeof(AbpAutoMapperModule),
-    typeof(AbpCachingModule)
+    typeof(AbpCachingModule),
+    typeof(PolpAbpFrameworkAbpExtensionsModule)
+
     )]
 public class ResourceManagementApplicationModule : AbpModule
 {

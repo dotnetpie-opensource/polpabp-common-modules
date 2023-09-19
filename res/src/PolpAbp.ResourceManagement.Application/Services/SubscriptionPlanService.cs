@@ -1,19 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using PolpAbp.ResourceManagement.Core;
 using PolpAbp.ResourceManagement.Domain.Entities;
+using PolpAbp.ResourceManagement.Services.Dtos;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 
 namespace PolpAbp.ResourceManagement.Services
 {
     [RemoteService(false)]
-    public class SubscriptionPlanService : ISubscriptionPlanService, ITransientDependency
+    public class SubscriptionPlanService : ResourceManagementAppService, ISubscriptionPlanService
     {
         private readonly IRepository<TenantSubscription, Guid> _subscriptionRepository;
         private readonly IRepository<Resource, Guid> _resourceRepository;
@@ -26,6 +26,40 @@ namespace PolpAbp.ResourceManagement.Services
             _subscriptionRepository = subscriptionRepository;
             _resourceRepository = resourceRepository;
             _options = options.Value;
+        }
+
+        public async Task<List<SubscriptionPlanOutputDto>> LoadCurrentPlansAsync(CancellationToken cancellationToken)
+        {
+            // Next 
+            var query = await _subscriptionRepository.WithDetailsAsync();
+
+            var now = DateTime.UtcNow;
+            var entries = query
+                .Where(a => !a.IsTerminated && a.EffectiveOn < now)
+                .ToList();
+
+            var ret =  entries.Select(elem =>
+            {
+                var y = ObjectMapper.Map<TenantSubscription, SubscriptionPlanOutputDto>(elem);
+                // Plan detail
+                y.Name = elem.Plan.Name;
+                y.Description = elem.Plan.Description;
+                y.BillingCycleId = elem.Plan.BillingCycleId;
+
+                // Breakdows 
+                y.Breakdowns = elem.Plan.Breakdowns.Select(l =>
+                {
+                    var m = ObjectMapper.Map<PlanBreakdown, PlanBreakdownOutputDto>(l);
+                    return m;
+                }).ToList();
+
+                return y;
+
+            }).ToList();
+
+            // TODO: Fill in the resource details.
+
+            return ret;
         }
 
         public async Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken)
@@ -43,11 +77,40 @@ namespace PolpAbp.ResourceManagement.Services
 
             if (entries.Count > 0 )
             {
-                // Find out the breakdown ... 
-                // Should be only one 
-                var effectiveSubr = entries.First();
-                var breakdown = effectiveSubr.Plan.Breakdowns.First(c => c.ResourceId == resourceEntry.Id);
-                return isTenantLevel ? breakdown.LimitAcrossTenant : breakdown.LimitPerUser;
+                if (isTenantLevel)
+                {
+                    // Aggreategate 
+                    var outerCount = entries.Aggregate(0L, (sum, elem) =>
+                    {
+                        // Resources 
+                        var details = elem.Plan.Breakdowns.Where(c => c.ResourceId == resourceEntry.Id);
+                        var innerCount = details.Aggregate(0L, (s2, e2) =>
+                        {
+                            return s2 + e2.LimitAcrossTenant;
+                        });
+
+                        return sum + innerCount * elem.Quantity;
+                    });
+
+                    return outerCount;
+                }
+                else
+                {
+                    // Aggreategate 
+                    var outerCount = entries.Aggregate(0L, (sum, elem) =>
+                    {
+                        // Resources 
+                        var details = elem.Plan.Breakdowns.Where(c => c.ResourceId == resourceEntry.Id);
+                        var innerCount = details.Aggregate(0L, (s2, e2) =>
+                        {
+                            return s2 + e2.LimitPerUser;
+                        });
+
+                        return sum + innerCount;
+                    });
+
+                    return outerCount;
+                }
             }
 
             // Read the configuration 
