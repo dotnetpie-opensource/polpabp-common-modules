@@ -10,6 +10,6 @@ namespace PolpAbp.ResourceManagement.Services
     {
         Task<Tuple<DateTime, DateTime?>> GetCurrentBillingPeriodAsync(string resourceName, CancellationToken cancellationToken);
         Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken);
-        Task<List<SubscriptionPlanOutputDto>> LoadCurrentPlansAsync(CancellationToken cancellationToken);
+        Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, CancellationToken cancellationToken);
     }
 }

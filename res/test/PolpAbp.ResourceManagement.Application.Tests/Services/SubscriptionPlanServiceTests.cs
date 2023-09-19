@@ -187,7 +187,7 @@ namespace PolpAbp.ResourceManagement.Services
                 await WithUnitOfWorkAsync(async () =>
                 {
                     var lst = await _subscriptionPlanService
-                    .LoadCurrentPlansAsync(default);
+                    .LoadEffectivePlansAsync(DateTime.UtcNow, default);
 
                     Assert.Single(lst);
                     var first = lst.First();

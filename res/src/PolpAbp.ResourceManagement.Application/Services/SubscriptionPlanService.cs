@@ -29,14 +29,13 @@ namespace PolpAbp.ResourceManagement.Services
             _options = options.Value;
         }
 
-        public async Task<List<SubscriptionPlanOutputDto>> LoadCurrentPlansAsync(CancellationToken cancellationToken)
+        public async Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, CancellationToken cancellationToken)
         {
             // Next 
             var query = await _subscriptionRepository.WithDetailsAsync();
 
-            var now = DateTime.UtcNow;
             var entries = query
-                .Where(a => !a.IsTerminated && a.EffectiveOn < now)
+                .Where(a => !a.IsTerminated && a.EffectiveOn < referenceTime)
                 .ToList();
 
             var ret =  entries.Select(elem =>
@@ -48,7 +47,7 @@ namespace PolpAbp.ResourceManagement.Services
                 y.BillingCycleId = elem.Plan.BillingCycleId;
 
                 // Inferred properties
-                var u = ComputeBillingDateRange(elem.BillingCycleOn, elem.Plan.BillingCycle, now);
+                var u = ComputeBillingDateRange(elem.BillingCycleOn, elem.Plan.BillingCycle, referenceTime);
                 y.CurrentBillingStartDate = u.Item1;
                 y.CurrentBillingEndDate = u.Item2;
 
