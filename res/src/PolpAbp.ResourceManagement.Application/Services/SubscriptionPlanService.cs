@@ -35,7 +35,7 @@ namespace PolpAbp.ResourceManagement.Services
             var query = await _subscriptionRepository.WithDetailsAsync();
 
             var entries = query
-                .Where(a => !a.IsTerminated && a.EffectiveOn < referenceTime)
+                .Where(a => a.EffectiveOn < referenceTime && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > referenceTime))
                 .ToList();
 
             var ret =  entries.Select(elem =>
@@ -77,7 +77,7 @@ namespace PolpAbp.ResourceManagement.Services
 
             var now = DateTime.UtcNow;
             var entries = query
-                .Where(a => !a.IsTerminated && a.EffectiveOn < now && a.Plan.Breakdowns.Any(b => b.ResourceId == resourceEntry.Id))
+                .Where(a => a.EffectiveOn < now && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > now) && a.Plan.Breakdowns.Any(b => b.ResourceId == resourceEntry.Id))
                 .ToList();
 
             if (entries.Count > 0 )
@@ -136,7 +136,7 @@ namespace PolpAbp.ResourceManagement.Services
             var query = await _subscriptionRepository.WithDetailsAsync();
             var now = DateTime.UtcNow;
             var entry = query
-                .Where(a => !a.IsTerminated && a.EffectiveOn < now && a.Plan.Breakdowns.Any(b => b.ResourceId == resourceEntry.Id))
+                .Where(a => a.EffectiveOn < now && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > now) && a.Plan.Breakdowns.Any(b => b.ResourceId == resourceEntry.Id))
                 .FirstOrDefault();
 
             if (entry != null )

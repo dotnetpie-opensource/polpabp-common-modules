@@ -14,6 +14,7 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
         public int Quantity { get; set; }
 
         public DateTime EffectiveOn { get; set; }
+        [Obsolete]
         public bool IsTerminated { get; set; }
         public DateTime? TerminatedOn { get; set; }
 
