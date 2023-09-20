@@ -60,7 +60,6 @@ namespace PolpAbp.ResourceManagement.Services
                     var sub = new TenantSubscription(Guid.NewGuid())
                     {
                         BillingCycleOn = DateTime.UtcNow.AddDays(-1),
-                        IsTerminated = false,
                         EffectiveOn = DateTime.UtcNow.AddDays(-1),
                         PlanId = plan.Id,
                         Quantity = 1,
@@ -117,7 +116,6 @@ namespace PolpAbp.ResourceManagement.Services
                     var sub = new TenantSubscription(Guid.NewGuid())
                     {
                         BillingCycleOn = DateTime.UtcNow.AddDays(-1),
-                        IsTerminated = false,
                         EffectiveOn = DateTime.UtcNow.AddDays(-1),
                         PlanId = plan.Id,
                         Quantity = 10,
@@ -174,7 +172,6 @@ namespace PolpAbp.ResourceManagement.Services
                     var sub = new TenantSubscription(Guid.NewGuid())
                     {
                         BillingCycleOn = DateTime.UtcNow.AddDays(-1),
-                        IsTerminated = false,
                         EffectiveOn = DateTime.UtcNow.AddDays(-1),
                         PlanId = plan.Id,
                         Quantity = 1,
@@ -193,6 +190,109 @@ namespace PolpAbp.ResourceManagement.Services
                     var first = lst.First();
                     Assert.NotNull(first.CurrentBillingEndDate);
 
+                });
+            }
+        }
+
+        [Fact]
+        public async Task CanFilterTerminatedPlansAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var resource = await _resourceRepository
+                    .GetAsync(x => x.Name == ResourceManagementTestConsts.SmsResourceName);
+
+                    var plan = new Plan(Guid.NewGuid())
+                    {
+                        Name = "Passed Plan",
+                        Description = "Description",
+                        BillingCycleId = (int)BillingCycleEnum.Month,
+                        Breakdowns = new List<PlanBreakdown>
+                        {
+                            new PlanBreakdown(Guid.NewGuid())
+                            {
+                               ResourceId = resource.Id,
+                               LimitPerUser = 0,
+                               LimitAcrossTenant = 10000
+                            }
+                        }
+                    };
+
+                    await _planRepository.InsertAsync(plan);
+
+                    var sub = new TenantSubscription(Guid.NewGuid())
+                    {
+                        BillingCycleOn = DateTime.UtcNow.AddMonths(-1),
+                        TerminatedOn = DateTime.UtcNow.AddDays(-1),
+                        EffectiveOn = DateTime.UtcNow.AddMonths(-1),
+                        PlanId = plan.Id,
+                        Quantity = 1,
+                        TenantId = ResourceManagementTestConsts.TenantId
+                    };
+
+                    await _tenantSubscriptionRepository.InsertAsync(sub);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var lst = await _subscriptionPlanService
+                    .LoadEffectivePlansAsync(DateTime.UtcNow, default);
+
+                    Assert.Empty(lst);
+                });
+            }
+        }
+
+        [Fact]
+        public async Task CanLoadFuturePlansAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var resource = await _resourceRepository
+                    .GetAsync(x => x.Name == ResourceManagementTestConsts.SmsResourceName);
+
+                    var plan = new Plan(Guid.NewGuid())
+                    {
+                        Name = "Future Plan",
+                        Description = "Description",
+                        BillingCycleId = (int)BillingCycleEnum.Month,
+                        Breakdowns = new List<PlanBreakdown>
+                        {
+                            new PlanBreakdown(Guid.NewGuid())
+                            {
+                               ResourceId = resource.Id,
+                               LimitPerUser = 0,
+                               LimitAcrossTenant = 10000
+                            }
+                        }
+                    };
+
+                    await _planRepository.InsertAsync(plan);
+
+                    var sub = new TenantSubscription(Guid.NewGuid())
+                    {
+                        BillingCycleOn = DateTime.UtcNow.AddMonths(1),
+                        EffectiveOn = DateTime.UtcNow.AddMonths(1),
+                        PlanId = plan.Id,
+                        Quantity = 1,
+                        TenantId = ResourceManagementTestConsts.TenantId
+                    };
+
+                    await _tenantSubscriptionRepository.InsertAsync(sub);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var lst = await _subscriptionPlanService
+                    .LoadEffectivePlansAsync(DateTime.UtcNow.AddMonths(1).AddDays(1), default);
+
+                    Assert.Single(lst);
+                    var first = lst.First();
+                    Assert.NotNull(first.CurrentBillingEndDate);
                 });
             }
         }
