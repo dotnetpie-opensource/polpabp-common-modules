@@ -7,8 +7,10 @@ namespace PolpAbp.MultiTenancy.Services
 {
     public interface ITenantAddOnAppService
     {
+        Task AddOrUpdateAddressMapAsync(TenantAddressMapInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default);
         Task AddOrUpdatePictureMapAsync(TenantPictureMapInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default);
         Task<Guid> CreateOrUpdateAsync(TenantAddOnInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task DeleteAddressMapAsync(Guid addressId, bool autoSave = false, CancellationToken cancellationToken = default);
         Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default);
         Task DeletePicutreMapAsync(Guid pictureId, bool autoSave = false, CancellationToken cancellationToken = default);
         /// <summary>

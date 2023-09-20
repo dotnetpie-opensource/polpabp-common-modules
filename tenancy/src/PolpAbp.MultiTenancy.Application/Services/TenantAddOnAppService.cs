@@ -83,6 +83,36 @@ namespace PolpAbp.MultiTenancy.Services
             await _tenantAddOnRepository.RemovePictureMapsByPictureIdsAsync(id, new List<Guid> { pictureId }, autoSave, cancellationToken);
         }
 
+        public async Task AddOrUpdateAddressMapAsync(TenantAddressMapInputDto dto, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            // Note that we must pass the autosave to be true.
+            var id = await _tenantAddOnRepository.EnsureForTenantIdAsync(CurrentTenant.Id.Value, autoSave: true, cancellationToken: cancellationToken);
+
+            var entry = await _tenantAddOnRepository.GetAsync(id, includeDetails: true, cancellationToken: cancellationToken);
+            var anyMap = entry.AddressMaps.Where(a => a.AddressId == dto.AddressId).FirstOrDefault();
+            if (anyMap != null)
+            {
+                // Update 
+                await _tenantAddOnRepository.UpdateAddressMapAsync(id, anyMap.Id, (record) =>
+                {
+                    ObjectMapper.Map(dto, record);
+                }, autoSave, cancellationToken);
+                return;
+            }
+
+            // Add a new record 
+            var newMap = new TenantAddressMap(GuidGenerator.Create());
+            ObjectMapper.Map(dto, newMap);
+            await _tenantAddOnRepository.AddAddressMapsAsync(id, new List<TenantAddressMap> { newMap }, autoSave, cancellationToken);
+        }
+
+        public async Task DeleteAddressMapAsync(Guid addressId, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            var id = await _tenantAddOnRepository.EnsureForTenantIdAsync(CurrentTenant.Id.Value, autoSave: true, cancellationToken: cancellationToken);
+
+            await _tenantAddOnRepository.RemoveAddressMapsByAddressIdsAsync(id, new List<Guid> { addressId }, autoSave, cancellationToken);
+        }
+
         protected TenantAddOnOutputDto BuildDto(TenantAddOn entity)
         {
             var dto = ObjectMapper.Map<TenantAddOn, TenantAddOnOutputDto>(entity);
