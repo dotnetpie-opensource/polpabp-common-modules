@@ -21,6 +21,9 @@ public class ResourceManagementApplicationAutoMapperProfile : Profile
             .ForMember(dst => dst.CurrentBillingEndDate, o => o.Ignore())
             .IgnoreSourceMissingProperties();
 
+        CreateMap<SubscriptionPlanInputDto, TenantSubscription>()
+            .IgnoreSourceMissingProperties();
+
         CreateMap<PlanBreakdown, PlanBreakdownOutputDto>()
             .ForMember(dst => dst.Name, o => o.Ignore())
             .ForMember(dst => dst.Description, o => o.Ignore())

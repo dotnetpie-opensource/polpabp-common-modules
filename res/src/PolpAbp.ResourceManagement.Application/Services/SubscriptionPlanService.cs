@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 
 namespace PolpAbp.ResourceManagement.Services
@@ -65,6 +64,31 @@ namespace PolpAbp.ResourceManagement.Services
             // TODO: Fill in the resource details.
 
             return ret;
+        }
+
+        public async Task UpdateSubscriptionsAsync(List<SubscriptionPlanInputDto> input, CancellationToken cancellationToken)
+        {
+            // Find out the current subscriptions 
+            var query = await _subscriptionRepository.WithDetailsAsync();
+
+            var referenceTime = DateTime.UtcNow;
+            var entries = query
+                .Where(a => a.EffectiveOn < referenceTime && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > referenceTime))
+                .ToList();
+
+            // Create new subscriptions 
+            foreach(var newPlan in input)
+            {
+                var newSub = ObjectMapper.Map<SubscriptionPlanInputDto, TenantSubscription>(newPlan);
+                await _subscriptionRepository.InsertAsync(newSub, cancellationToken: cancellationToken);
+            }
+
+            // Delete old one          
+            foreach(var oldPlan in entries)
+            {
+                oldPlan.TerminatedOn = referenceTime;
+                await _subscriptionRepository.UpdateAsync(oldPlan, cancellationToken: cancellationToken);
+            }
         }
 
         public async Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken)
