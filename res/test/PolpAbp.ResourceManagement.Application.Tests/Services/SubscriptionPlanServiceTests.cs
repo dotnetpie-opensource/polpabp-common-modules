@@ -1,5 +1,6 @@
 ﻿using PolpAbp.ResourceManagement.Core;
 using PolpAbp.ResourceManagement.Domain.Entities;
+using PolpAbp.ResourceManagement.Services.Dtos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -295,6 +296,153 @@ namespace PolpAbp.ResourceManagement.Services
                     Assert.NotNull(first.CurrentBillingEndDate);
                 });
             }
+        }
+
+        [Fact]
+        public async Task CanUpdatePlansAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var resource = await _resourceRepository
+                    .GetAsync(x => x.Name == ResourceManagementTestConsts.SmsResourceName);
+
+                    var firstPlan = new Plan(ResourceManagementTestConsts.FirstPlanId)
+                    {
+                        Name = "Lite Plan",
+                        Description = "Description",
+                        BillingCycleId = (int)BillingCycleEnum.Month,
+                        Breakdowns = new List<PlanBreakdown>
+                        {
+                            new PlanBreakdown(Guid.NewGuid())
+                            {
+                               ResourceId = resource.Id,
+                               LimitPerUser = 0,
+                               LimitAcrossTenant = 10000
+                            }
+                        }
+                    };
+                    await _planRepository.InsertAsync(firstPlan);
+
+                    var secondPlan = new Plan(ResourceManagementTestConsts.SecondPlanId)
+                    {
+                        Name = "Profession Plan",
+                        Description = "Description",
+                        BillingCycleId = (int)BillingCycleEnum.Month,
+                        Breakdowns = new List<PlanBreakdown>
+                        {
+                            new PlanBreakdown(Guid.NewGuid())
+                            {
+                               ResourceId = resource.Id,
+                               LimitPerUser = 0,
+                               LimitAcrossTenant = 10000
+                            }
+                        }
+                    };
+                    await _planRepository.InsertAsync(secondPlan);
+
+                    var sub = new TenantSubscription(Guid.NewGuid())
+                    {
+                        BillingCycleOn = DateTime.UtcNow.AddMonths(-1),
+                        EffectiveOn = DateTime.UtcNow.AddMonths(-1),
+                        PlanId = ResourceManagementTestConsts.FirstPlanId,
+                        Quantity = 1,
+                        TenantId = ResourceManagementTestConsts.TenantId
+                    };
+
+                    await _tenantSubscriptionRepository.InsertAsync(sub);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var now = DateTime.UtcNow;
+
+                    var newPlans = new List<SubscriptionPlanInputDto>();
+                    newPlans.Add(new SubscriptionPlanInputDto()
+                    {
+                        BillingCycleOn = now.AddDays(-1),
+                        EffectiveOn = now.AddDays(-1),
+                        PlanId = ResourceManagementTestConsts.SecondPlanId,
+                        Quantity = 1
+                    });
+
+                    await _subscriptionPlanService
+                    .UpdateSubscriptionsAsync(newPlans, default);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var lst = await _subscriptionPlanService
+                    .LoadEffectivePlansAsync(DateTime.UtcNow, default);
+
+                    Assert.Single(lst);
+                    var first = lst.First();
+                    Assert.Equal(first.PlanId, ResourceManagementTestConsts.SecondPlanId);
+                });
+            }
+        }
+
+        [Fact]
+        public async Task CanCancelPlansAsync()
+        {
+            using (_currentTenant.Change(ResourceManagementTestConsts.TenantId))
+            {
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var resource = await _resourceRepository
+                    .GetAsync(x => x.Name == ResourceManagementTestConsts.SmsResourceName);
+
+                    var firstPlan = new Plan(ResourceManagementTestConsts.FirstPlanId)
+                    {
+                        Name = "Lite Plan",
+                        Description = "Description",
+                        BillingCycleId = (int)BillingCycleEnum.Month,
+                        Breakdowns = new List<PlanBreakdown>
+                    {
+                            new PlanBreakdown(Guid.NewGuid())
+                            {
+                               ResourceId = resource.Id,
+                               LimitPerUser = 0,
+                               LimitAcrossTenant = 10000
+                            }
+                    }
+                    };
+                    await _planRepository.InsertAsync(firstPlan);
+                    var sub = new TenantSubscription(Guid.NewGuid())
+                    {
+                        BillingCycleOn = DateTime.UtcNow.AddMonths(-1),
+                        EffectiveOn = DateTime.UtcNow.AddMonths(-1),
+                        PlanId = ResourceManagementTestConsts.FirstPlanId,
+                        Quantity = 1,
+                        TenantId = ResourceManagementTestConsts.TenantId
+                    };
+
+                    await _tenantSubscriptionRepository.InsertAsync(sub);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var now = DateTime.UtcNow;
+                    var lst = await _subscriptionPlanService
+                                      .LoadEffectivePlansAsync(now, default);
+
+                    Assert.Single(lst);
+
+                    await _subscriptionPlanService
+                    .CancelSubscriptionsAsync(now, default);
+                });
+
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    var lst = await _subscriptionPlanService
+                    .LoadEffectivePlansAsync(DateTime.UtcNow, default);
+
+                    Assert.Empty(lst);
+                });
+            }
+
+
         }
     }
 }

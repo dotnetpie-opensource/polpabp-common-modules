@@ -66,6 +66,24 @@ namespace PolpAbp.ResourceManagement.Services
             return ret;
         }
 
+        public async Task CancelSubscriptionsAsync(DateTime cancelledOn, CancellationToken cancellationToken)
+        {
+            // Find out the current subscriptions 
+            var query = await _subscriptionRepository.WithDetailsAsync();
+
+            var referenceTime = DateTime.UtcNow;
+            var entries = query
+                .Where(a => a.EffectiveOn < referenceTime && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > referenceTime))
+                .ToList();
+
+            // Delete old one          
+            foreach (var oldPlan in entries)
+            {
+                oldPlan.TerminatedOn = cancelledOn;
+                await _subscriptionRepository.UpdateAsync(oldPlan, cancellationToken: cancellationToken);
+            }
+        }
+
         public async Task UpdateSubscriptionsAsync(List<SubscriptionPlanInputDto> input, CancellationToken cancellationToken)
         {
             // Find out the current subscriptions 
@@ -86,7 +104,7 @@ namespace PolpAbp.ResourceManagement.Services
             // Delete old one          
             foreach(var oldPlan in entries)
             {
-                oldPlan.TerminatedOn = referenceTime;
+                oldPlan.TerminatedOn = input.First().EffectiveOn;
                 await _subscriptionRepository.UpdateAsync(oldPlan, cancellationToken: cancellationToken);
             }
         }

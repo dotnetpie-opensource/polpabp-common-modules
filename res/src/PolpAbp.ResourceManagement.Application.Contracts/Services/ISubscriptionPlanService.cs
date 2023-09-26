@@ -18,5 +18,6 @@ namespace PolpAbp.ResourceManagement.Services
         /// <returns>List of plans</returns>
         Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, CancellationToken cancellationToken);
         Task UpdateSubscriptionsAsync(List<SubscriptionPlanInputDto> input, CancellationToken cancellationToken);
+        Task CancelSubscriptionsAsync(DateTime cancelledOn, CancellationToken cancellationToken);
     }
 }

@@ -17,6 +17,10 @@ namespace PolpAbp.ResourceManagement
         public static string User1Email = "user1@gmail.com";
         public static string User2Email = "user2@gmail.com";
 
+        // Plan Id
+        public static Guid FirstPlanId = new Guid("996fc873-a501-4581-aa39-1c63b14f7fb0");
+        public static Guid SecondPlanId = new Guid("14b71456-71fa-4919-a43a-684854b19683");
+
         // Group 
         public static string Group1DsiplayName = "Group1";
 
