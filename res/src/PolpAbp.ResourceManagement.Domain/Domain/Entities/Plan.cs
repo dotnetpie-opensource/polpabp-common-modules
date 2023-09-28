@@ -16,18 +16,18 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
         public BillingCycleEnum BillingCycle => (BillingCycleEnum)BillingCycleId;
 
         public virtual List<PlanBreakdown> Breakdowns { get; set; }
-        public virtual List<CategoryRestriction> CategoryRestrictions { get; set; }
+        public virtual List<PlanCategoryQuota> CategoryQuotas { get; set; }
 
         protected Plan() : base()
         {
             Breakdowns = new List<PlanBreakdown>();
-            CategoryRestrictions = new List<CategoryRestriction>();
+            CategoryQuotas = new List<PlanCategoryQuota>();
         }
 
         public Plan(Guid id) : base(id) 
         {
             Breakdowns = new List<PlanBreakdown>();
-            CategoryRestrictions = new List<CategoryRestriction>();
+            CategoryQuotas = new List<PlanCategoryQuota>();
         }
     }
 }

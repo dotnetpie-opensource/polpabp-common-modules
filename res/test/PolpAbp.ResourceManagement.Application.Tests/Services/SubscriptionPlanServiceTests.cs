@@ -43,6 +43,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var plan = new Plan(Guid.NewGuid())
                     {
                         Name = "Golden Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -99,6 +100,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var plan = new Plan(Guid.NewGuid())
                     {
                         Name = "Per person Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -155,6 +157,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var plan = new Plan(Guid.NewGuid())
                     {
                         Name = "Lite Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -208,6 +211,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var plan = new Plan(Guid.NewGuid())
                     {
                         Name = "Passed Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -259,6 +263,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var plan = new Plan(Guid.NewGuid())
                     {
                         Name = "Future Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -311,6 +316,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var firstPlan = new Plan(ResourceManagementTestConsts.FirstPlanId)
                     {
                         Name = "Lite Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -328,6 +334,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var secondPlan = new Plan(ResourceManagementTestConsts.SecondPlanId)
                     {
                         Name = "Profession Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>
@@ -396,6 +403,7 @@ namespace PolpAbp.ResourceManagement.Services
                     var firstPlan = new Plan(ResourceManagementTestConsts.FirstPlanId)
                     {
                         Name = "Lite Plan",
+                        Family = "Initial launch v1",
                         Description = "Description",
                         BillingCycleId = (int)BillingCycleEnum.Month,
                         Breakdowns = new List<PlanBreakdown>

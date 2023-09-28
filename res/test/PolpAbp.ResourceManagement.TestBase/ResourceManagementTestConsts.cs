@@ -25,6 +25,9 @@ namespace PolpAbp.ResourceManagement
         public static string Group1DsiplayName = "Group1";
 
         // resource 
-        public static string SmsResourceName = nameof(SmsResourceName);
+        public static string SmsResourceName = "EMAIL";
+        public static string FormPublication = "Form Publiation";
+        public static string FormFlowPublication = "Form Flow Publiation";
+
     }
 }

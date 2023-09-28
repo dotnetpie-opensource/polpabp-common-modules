@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PolpAbp.ResourceManagement.Services.Dtos
 {
@@ -22,15 +21,19 @@ namespace PolpAbp.ResourceManagement.Services.Dtos
 
         // From plan
         public string Name { get; set; }
+        public string Family { get; set; }
         public string Description { get; set; }
 
         public int BillingCycleId { get; set; }
 
         // Plan breakdown 
         public List<PlanBreakdownOutputDto> Breakdowns { get; set; }
+        // Category restriction
+        public List<PlanCategoryQuotaOutputDto> CategoryQuotas { get; set; }
 
         public SubscriptionPlanOutputDto() { 
             Breakdowns = new List<PlanBreakdownOutputDto>();
+            CategoryQuotas = new List<PlanCategoryQuotaOutputDto>();
         }
     }
 }

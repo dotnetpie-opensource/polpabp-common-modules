@@ -133,20 +133,20 @@ public static class ResourceManagementDbContextModelCreatingExtensions
             .HasForeignKey(p => p.PlanId);
         });
 
-        builder.Entity<CategoryRestriction>(b =>
+        builder.Entity<PlanCategoryQuota>(b =>
         {
             //Configure table & schema name
             b.ToTable(ResourceManagementDbProperties.DbTablePrefix
-                + ResourceManagementDbProperties.TableNames.CategoryRestriction,
+                + ResourceManagementDbProperties.TableNames.PLanCategoryQuota,
                 ResourceManagementDbProperties.DbSchema);
             b.ConfigureByConvention();
 
-            b.Property(q => q.Name)
+            b.Property(q => q.Category)
           .HasMaxLength(ResourceManagementDomainConsts.MaxResourceCategoryLength);
 
             // Plan has been configured above.
             b.HasOne<Plan>()
-            .WithMany(y => y.CategoryRestrictions)
+            .WithMany(y => y.CategoryQuotas)
             .HasForeignKey(p => p.PlanId);
         });
 

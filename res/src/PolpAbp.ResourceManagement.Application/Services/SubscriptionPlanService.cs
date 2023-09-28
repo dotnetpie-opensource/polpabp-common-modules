@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 
 namespace PolpAbp.ResourceManagement.Services
 {
@@ -42,6 +43,7 @@ namespace PolpAbp.ResourceManagement.Services
                 var y = ObjectMapper.Map<TenantSubscription, SubscriptionPlanOutputDto>(elem);
                 // Plan detail
                 y.Name = elem.Plan.Name;
+                y.Family = elem.Plan.Family;
                 y.Description = elem.Plan.Description;
                 y.BillingCycleId = elem.Plan.BillingCycleId;
 
@@ -54,6 +56,12 @@ namespace PolpAbp.ResourceManagement.Services
                 y.Breakdowns = elem.Plan.Breakdowns.Select(l =>
                 {
                     var m = ObjectMapper.Map<PlanBreakdown, PlanBreakdownOutputDto>(l);
+                    return m;
+                }).ToList();
+
+                y.CategoryQuotas = elem.Plan.CategoryQuotas.Select(l =>
+                {
+                    var m = ObjectMapper.Map<PlanCategoryQuota, PlanCategoryQuotaOutputDto>(l);
                     return m;
                 }).ToList();
 

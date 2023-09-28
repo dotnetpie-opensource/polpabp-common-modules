@@ -3,18 +3,18 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace PolpAbp.ResourceManagement.Domain.Entities
 {
-    public class CategoryRestriction : AuditedEntity<Guid>
+    public class PlanCategoryQuota : AuditedEntity<Guid>
     {
         public Guid PlanId { get;set;}  
 
-        public string Name { get;set;}
+        public string Category { get;set;}
 
         public long LimitAcrossTenant { get; set;}
         public long LimitPerUser { get; set;}
 
-        protected CategoryRestriction() :base() { }
+        protected PlanCategoryQuota() :base() { }
 
-        public CategoryRestriction(Guid id) : base(id) { }
+        public PlanCategoryQuota(Guid id) : base(id) { }
 
     }
 }

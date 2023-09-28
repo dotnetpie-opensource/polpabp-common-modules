@@ -15,6 +15,6 @@ public interface IResourceManagementDbContext : IEfCoreDbContext
 
     DbSet<Plan> Plans { get; }
     DbSet<PlanBreakdown> Breakdowns { get; }
-    DbSet<CategoryRestriction> CategoryRestrictions { get; }
+    DbSet<PlanCategoryQuota> CategoryQuotas { get; }
     DbSet<TenantSubscription> TenantSubscriptions { get; }
 }

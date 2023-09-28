@@ -14,9 +14,11 @@ public class ResourceManagementApplicationAutoMapperProfile : Profile
 
         CreateMap<TenantSubscription, SubscriptionPlanOutputDto>()
             .ForMember(dst => dst.Name, o => o.Ignore())
+            .ForMember(dst => dst.Family, o => o.Ignore())
             .ForMember(dst => dst.Description, o => o.Ignore())
             .ForMember(dst => dst.BillingCycleId, o => o.Ignore())
             .ForMember(dst => dst.Breakdowns, o => o.Ignore())
+            .ForMember(dst => dst.CategoryQuotas, o => o.Ignore())
             .ForMember(dst => dst.CurrentBillingStartDate, o => o.Ignore())
             .ForMember(dst => dst.CurrentBillingEndDate, o => o.Ignore())
             .IgnoreSourceMissingProperties();
@@ -28,5 +30,8 @@ public class ResourceManagementApplicationAutoMapperProfile : Profile
             .ForMember(dst => dst.Name, o => o.Ignore())
             .ForMember(dst => dst.Description, o => o.Ignore())
             .ForMember(dst => dst.Category, o => o.Ignore());
+
+        CreateMap<PlanCategoryQuota, PlanCategoryQuotaOutputDto>();
+
     }
 }
