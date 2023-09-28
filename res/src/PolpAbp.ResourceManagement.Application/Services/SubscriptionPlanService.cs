@@ -117,7 +117,7 @@ namespace PolpAbp.ResourceManagement.Services
             }
         }
 
-        public async Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken)
+        public async Task<long> GetQuotaByResourceNameAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken)
         {
             // Require the resource id 
             var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName, cancellationToken: cancellationToken);
@@ -173,6 +173,57 @@ namespace PolpAbp.ResourceManagement.Services
             if (anyCfg != null)
             {
                 return isTenantLevel ? anyCfg.LimitAcrossTenant : anyCfg.LimitPerUser;
+            }
+
+            return 0;
+        }
+
+        public async Task<long> GetQuotaByCategoryNameAsync(string categoryName, bool isTenantLevel, CancellationToken cancellationToken)
+        {
+            // Next 
+            var query = await _subscriptionRepository.WithDetailsAsync();
+
+            var now = DateTime.UtcNow;
+            var entries = query
+                .Where(a => a.EffectiveOn < now && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > now) && a.Plan.CategoryQuotas.Any(b => b.Category == categoryName))
+                .ToList();
+
+            if (entries.Count > 0)
+            {
+                if (isTenantLevel)
+                {
+                    // Aggreategate 
+                    var outerCount = entries.Aggregate(0L, (sum, elem) =>
+                    {
+                        // Resources 
+                        var details = elem.Plan.CategoryQuotas.Where(c => c.Category == categoryName);
+                        var innerCount = details.Aggregate(0L, (s2, e2) =>
+                        {
+                            return s2 + e2.LimitAcrossTenant;
+                        });
+
+                        return sum + innerCount * elem.Quantity;
+                    });
+
+                    return outerCount;
+                }
+                else
+                {
+                    // Aggreategate 
+                    var outerCount = entries.Aggregate(0L, (sum, elem) =>
+                    {
+                        // Resources 
+                        var details = elem.Plan.CategoryQuotas.Where(c => c.Category == categoryName);
+                        var innerCount = details.Aggregate(0L, (s2, e2) =>
+                        {
+                            return s2 + e2.LimitPerUser;
+                        });
+
+                        return sum + innerCount;
+                    });
+
+                    return outerCount;
+                }
             }
 
             return 0;

@@ -1,11 +1,17 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PolpAbp.ResourceManagement.Services
 {
     public interface IResourceUsageQueryService
     {
-        Task<ResourceUsageCacheItem> GetResourceUsageAsync(string resourceName, string cacheKey, 
+        Task<ResourceUsageCacheItem> GetUsageByResourceNameAsync(string resourceName, string cacheKey, 
             int expiredInMins = 10, bool forceReload = false, CancellationToken cancellationToken = default);
+
+        Task<ResourceUsageCacheItem> GetUsageByCategoryNameAsync(string categoryName,
+                Func<string, string> cacheKeyFunc,
+                int expiredInMins = 10, bool forceReload = false,
+                CancellationToken cancellationToken = default);
     }
 }

@@ -9,7 +9,8 @@ namespace PolpAbp.ResourceManagement.Services
     public interface ISubscriptionPlanService
     {
         Task<Tuple<DateTime, DateTime?>> GetCurrentBillingPeriodAsync(string resourceName, CancellationToken cancellationToken);
-        Task<long> GetQuotaAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken);
+        Task<long> GetQuotaByResourceNameAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken);
+        Task<long> GetQuotaByCategoryNameAsync(string categoryName, bool isTenantLevel, CancellationToken cancellationToken);
         /// <summary>
         /// Computes the effective plans for now or any future time
         /// </summary>

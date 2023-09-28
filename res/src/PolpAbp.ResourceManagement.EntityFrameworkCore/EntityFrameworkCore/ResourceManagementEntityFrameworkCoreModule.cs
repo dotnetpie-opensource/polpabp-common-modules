@@ -26,14 +26,18 @@ public class ResourceManagementEntityFrameworkCoreModule : AbpModule
             {
                 a.DefaultWithDetailsFunc = (q) =>
                 {
-                    return q.Include(c => c.Plan).ThenInclude(d => d.Breakdowns);
+                    return q.Include(c => c.Plan)
+                    .ThenInclude(d => d.Breakdowns)
+                    .Include(c => c.Plan)
+                    .ThenInclude(d => d.CategoryQuotas);
                 };
             });
             options.Entity<Plan>(a =>
             {
                 a.DefaultWithDetailsFunc = (q) =>
                 {
-                    return q.Include(c => c.Breakdowns);
+                    return q.Include(c => c.Breakdowns)
+                    .Include(d => d.CategoryQuotas);
                 };
             });
         });
