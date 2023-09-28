@@ -8,6 +8,7 @@
         public const int MaxResourceCategoryLength = 256;
 
         public const int MaxPlanNameLength = 256;
+        public const int MaxPlanFamilyLength = 256;
         public const int MaxPlanDescLength = 1024;
     }
 }

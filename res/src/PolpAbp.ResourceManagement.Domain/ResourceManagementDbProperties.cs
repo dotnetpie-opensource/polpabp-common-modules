@@ -19,6 +19,7 @@ public static class ResourceManagementDbProperties
 
         public const string Plan = "Plans";
         public const string PlanBreakdown = "PlanBreakdowns";
+        public const string CategoryRestriction = "CategoryRestrictions";
         public const string TenantSubscription = "TenantSubscriptions";
     }
 }

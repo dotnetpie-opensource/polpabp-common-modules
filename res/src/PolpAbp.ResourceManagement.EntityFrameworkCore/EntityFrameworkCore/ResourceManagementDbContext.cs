@@ -15,6 +15,7 @@ public class ResourceManagementDbContext : AbpDbContext<ResourceManagementDbCont
 
     public DbSet<Plan> Plans { get; set; }
     public DbSet<PlanBreakdown> Breakdowns { get; set; }
+    public DbSet<CategoryRestriction> CategoryRestrictions { get; set; }
     public DbSet<TenantSubscription> TenantSubscriptions { get; set; }
 
     public ResourceManagementDbContext(DbContextOptions<ResourceManagementDbContext> options)

@@ -8,6 +8,7 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
     public class Plan : FullAuditedAggregateRoot<Guid>
     {
         public string Name { get; set; }
+        public string Family { get; set; }
         public string Description { get; set; }
 
         public int BillingCycleId { get; set; }
@@ -15,15 +16,18 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
         public BillingCycleEnum BillingCycle => (BillingCycleEnum)BillingCycleId;
 
         public virtual List<PlanBreakdown> Breakdowns { get; set; }
+        public virtual List<CategoryRestriction> CategoryRestrictions { get; set; }
 
         protected Plan() : base()
         {
             Breakdowns = new List<PlanBreakdown>();
+            CategoryRestrictions = new List<CategoryRestriction>();
         }
 
         public Plan(Guid id) : base(id) 
         {
             Breakdowns = new List<PlanBreakdown>();
+            CategoryRestrictions = new List<CategoryRestriction>();
         }
     }
 }

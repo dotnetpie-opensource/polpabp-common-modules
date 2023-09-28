@@ -104,10 +104,15 @@ public static class ResourceManagementDbContextModelCreatingExtensions
                        .IsRequired()
                        .HasMaxLength(ResourceManagementDomainConsts.MaxPlanNameLength);
 
+            b.Property(q => q.Family)
+            .IsRequired()
+            .HasMaxLength(ResourceManagementDomainConsts.MaxPlanFamilyLength); 
+
             b.Property(q => q.Description)
-            .HasMaxLength(ResourceManagementDomainConsts.MaxPlanDescLength); 
+            .HasMaxLength(ResourceManagementDomainConsts.MaxPlanDescLength);
+
             // Indices 
-            b.HasIndex(x => x.Name).IsUnique();
+            b.HasIndex(x => new { x.Name, x.Family }).IsUnique();
         });
 
         builder.Entity<PlanBreakdown>(b =>
@@ -125,6 +130,23 @@ public static class ResourceManagementDbContextModelCreatingExtensions
             // Plan has been configured above.
             b.HasOne<Plan>()
             .WithMany(y => y.Breakdowns)
+            .HasForeignKey(p => p.PlanId);
+        });
+
+        builder.Entity<CategoryRestriction>(b =>
+        {
+            //Configure table & schema name
+            b.ToTable(ResourceManagementDbProperties.DbTablePrefix
+                + ResourceManagementDbProperties.TableNames.CategoryRestriction,
+                ResourceManagementDbProperties.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(q => q.Name)
+          .HasMaxLength(ResourceManagementDomainConsts.MaxResourceCategoryLength);
+
+            // Plan has been configured above.
+            b.HasOne<Plan>()
+            .WithMany(y => y.CategoryRestrictions)
             .HasForeignKey(p => p.PlanId);
         });
 
