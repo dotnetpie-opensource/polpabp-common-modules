@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using PolpAbp.ResourceManagement.Domain.Entities;
 using System;
-using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -28,6 +27,13 @@ namespace PolpAbp.ResourceManagement.Services
             _subscriptionPlanService = subscriptionPlanService;
             _cache = cache;
             _resourceRepository = resourceRepository;
+        }
+
+        public async Task<string> GetCategoryAsync(string resourceName, 
+            CancellationToken cancellationToken = default)
+        {
+            var resourceEntry = await _resourceRepository.GetAsync(a => a.Name == resourceName, cancellationToken: cancellationToken);
+            return resourceEntry.Category;
         }
 
         public async Task<ResourceUsageCacheItem> GetUsageByResourceNameAsync(string resourceName,

@@ -13,5 +13,6 @@ namespace PolpAbp.ResourceManagement.Services
                 Func<string, string> cacheKeyFunc,
                 int expiredInMins = 10, bool forceReload = false,
                 CancellationToken cancellationToken = default);
+        Task<string> GetCategoryAsync(string resourceName, CancellationToken cancellationToken = default);
     }
 }
