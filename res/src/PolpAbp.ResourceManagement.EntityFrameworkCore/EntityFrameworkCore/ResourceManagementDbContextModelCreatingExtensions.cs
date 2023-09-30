@@ -158,6 +158,9 @@ public static class ResourceManagementDbContextModelCreatingExtensions
                 ResourceManagementDbProperties.DbSchema);
             b.ConfigureByConvention();
 
+            b.Property(q => q.ExternalId)
+            .HasMaxLength(ResourceManagementDomainConsts.MaxGenenalStringLength);
+
             // Navigators
             b.HasOne(x => x.Plan)
             .WithMany()

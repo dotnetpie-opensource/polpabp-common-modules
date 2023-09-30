@@ -14,6 +14,7 @@ namespace PolpAbp.ResourceManagement.Services.Dtos
 
         public int Quantity { get; set; }
         public Guid PlanId { get; set; }
+        public string ExternalId { get; set; }
 
         // Inferred properties
         public DateTime CurrentBillingStartDate { get; set; }
@@ -25,6 +26,7 @@ namespace PolpAbp.ResourceManagement.Services.Dtos
         public string Description { get; set; }
 
         public int BillingCycleId { get; set; }
+
 
         // Plan breakdown 
         public List<PlanBreakdownOutputDto> Breakdowns { get; set; }

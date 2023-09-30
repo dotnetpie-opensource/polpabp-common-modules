@@ -20,6 +20,9 @@ namespace PolpAbp.ResourceManagement.Domain.Entities
 
         public DateTime BillingCycleOn { get; set; }
 
+        // Can be used for the external identifier Id.
+        public string ExternalId { get; set; }
+
         // Navigation
         public virtual Plan Plan { get; set; }
 

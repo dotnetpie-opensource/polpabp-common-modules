@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PolpAbp.ResourceManagement.Services.Dtos
 {
@@ -15,5 +13,7 @@ namespace PolpAbp.ResourceManagement.Services.Dtos
 
         public int Quantity { get; set; }
         public Guid PlanId { get; set; }
+
+        public string ExternalId { get; set; }
     }
 }
