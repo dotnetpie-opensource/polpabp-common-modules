@@ -77,30 +77,14 @@ namespace PolpAbp.ResourceManagement.Services
         public async Task CancelSubscriptionsAsync(DateTime cancelledOn, CancellationToken cancellationToken)
         {
             // Find out the current subscriptions 
-            var query = await _subscriptionRepository.WithDetailsAsync();
-
-            var referenceTime = DateTime.UtcNow;
-            var entries = query
-                .Where(a => a.EffectiveOn < referenceTime && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > referenceTime))
-                .ToList();
-
-            // Delete old one          
-            foreach (var oldPlan in entries)
-            {
-                oldPlan.TerminatedOn = cancelledOn;
-                await _subscriptionRepository.UpdateAsync(oldPlan, cancellationToken: cancellationToken);
-            }
+            var entries = await _subscriptionRepository.GetListAsync();
+            await _subscriptionRepository.DeleteManyAsync(entries, cancellationToken: cancellationToken);
         }
 
         public async Task UpdateSubscriptionsAsync(List<SubscriptionPlanInputDto> input, CancellationToken cancellationToken)
         {
             // Find out the current subscriptions 
-            var query = await _subscriptionRepository.WithDetailsAsync();
-
-            var referenceTime = DateTime.UtcNow;
-            var entries = query
-                .Where(a => a.EffectiveOn < referenceTime && (!a.TerminatedOn.HasValue || a.TerminatedOn.Value > referenceTime))
-                .ToList();
+            var entries = await _subscriptionRepository.GetListAsync();
 
             // Create new subscriptions 
             foreach(var newPlan in input)
@@ -110,11 +94,7 @@ namespace PolpAbp.ResourceManagement.Services
             }
 
             // Delete old one          
-            foreach(var oldPlan in entries)
-            {
-                oldPlan.TerminatedOn = input.First().EffectiveOn;
-                await _subscriptionRepository.UpdateAsync(oldPlan, cancellationToken: cancellationToken);
-            }
+            await _subscriptionRepository.DeleteManyAsync(entries, cancellationToken: cancellationToken);
         }
 
         public async Task<long> GetQuotaByResourceNameAsync(string resourceName, bool isTenantLevel, CancellationToken cancellationToken)
