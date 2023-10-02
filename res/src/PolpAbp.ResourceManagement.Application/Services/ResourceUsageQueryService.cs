@@ -91,6 +91,9 @@ namespace PolpAbp.ResourceManagement.Services
                 ret.Usage += a.Usage;
             }
 
+            var categoryQuota = await _subscriptionPlanService.GetQuotaByCategoryNameAsync(categoryName, true, cancellationToken);
+            ret.Quota = categoryQuota;
+
             return ret;
         }
     }
