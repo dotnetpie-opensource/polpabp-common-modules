@@ -92,7 +92,10 @@ namespace PolpAbp.ResourceManagement.Services
             }
 
             var categoryQuota = await _subscriptionPlanService.GetQuotaByCategoryNameAsync(categoryName, true, cancellationToken);
-            ret.Quota = categoryQuota;
+            if (categoryQuota > 0)
+            {
+                ret.Quota = categoryQuota;
+            }
 
             return ret;
         }
