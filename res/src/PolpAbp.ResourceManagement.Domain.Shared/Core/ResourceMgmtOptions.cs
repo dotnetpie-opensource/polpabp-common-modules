@@ -7,6 +7,8 @@ namespace PolpAbp.ResourceManagement.Core
     {
         public bool IsEnabled { get; set; }
 
+        public int Threshold { get; set; }
+
         public Dictionary<string, Type> Contributors { get; }
 
         public List<ResourceUsageLimit> FreeUsageLimit { get; set; }
