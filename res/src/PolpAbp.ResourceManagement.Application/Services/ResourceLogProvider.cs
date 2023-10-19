@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using PolpAbp.ResourceManagement.Core;
 using System;
 using System.Linq;
 using System.Threading;

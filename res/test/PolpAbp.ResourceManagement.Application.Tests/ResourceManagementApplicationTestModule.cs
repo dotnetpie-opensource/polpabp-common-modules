@@ -1,4 +1,5 @@
-﻿using PolpAbp.ResourceManagement.Services;
+﻿using PolpAbp.ResourceManagement.Core;
+using PolpAbp.ResourceManagement.Services;
 using Volo.Abp.Auditing;
 using Volo.Abp.Modularity;
 
