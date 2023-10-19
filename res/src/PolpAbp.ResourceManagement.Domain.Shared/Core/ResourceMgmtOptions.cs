@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PolpAbp.ResourceManagement.Core
 {
-    public class ResourceLogOptions
+    public class ResourceMgmtOptions
     {
         public bool IsEnabled { get; set; }
 
@@ -11,7 +11,7 @@ namespace PolpAbp.ResourceManagement.Core
 
         public List<ResourceUsageLimit> FreeUsageLimit { get; set; }
 
-        public ResourceLogOptions() {
+        public ResourceMgmtOptions() {
             IsEnabled = true;
             Contributors = new Dictionary<string, Type>();
             FreeUsageLimit = new List<ResourceUsageLimit>();

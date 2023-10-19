@@ -18,11 +18,11 @@ namespace PolpAbp.ResourceManagement.Services
     {
         private readonly IRepository<TenantSubscription, Guid> _subscriptionRepository;
         private readonly IRepository<Resource, Guid> _resourceRepository;
-        private readonly ResourceLogOptions _options;
+        private readonly ResourceMgmtOptions _options;
 
         public SubscriptionPlanService(IRepository<TenantSubscription, Guid> subscriptionRepository, 
             IRepository<Resource, Guid> resourceRepository,
-            IOptions<ResourceLogOptions> options)
+            IOptions<ResourceMgmtOptions> options)
         {
             _subscriptionRepository = subscriptionRepository;
             _resourceRepository = resourceRepository;

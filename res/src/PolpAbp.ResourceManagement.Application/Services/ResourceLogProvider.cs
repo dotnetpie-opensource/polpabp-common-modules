@@ -12,9 +12,9 @@ namespace PolpAbp.ResourceManagement.Services
     {
         public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
-        protected ResourceLogOptions Options; 
+        protected ResourceMgmtOptions Options; 
 
-        public ResourceLogProvider(IOptions<ResourceLogOptions> options)
+        public ResourceLogProvider(IOptions<ResourceMgmtOptions> options)
         {
             Options = options.Value;
         }

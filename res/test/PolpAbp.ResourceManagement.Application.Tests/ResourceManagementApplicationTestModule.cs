@@ -14,7 +14,7 @@ public class ResourceManagementApplicationTestModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
 
-        Configure<ResourceLogOptions>(options =>
+        Configure<ResourceMgmtOptions>(options =>
         {
             options.Contributors.Add(ResourceManagementTestConsts.SmsResourceName, typeof(SmsResourceLogContributor));
         });
