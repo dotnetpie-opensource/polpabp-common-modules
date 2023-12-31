@@ -72,7 +72,7 @@ namespace PolpAbp.InlineMedia.Services
                                 //resizing required
                                 if (targetSize != 0)
                                 {
-                                    var newSize = CalculateDimensions(image.Size(), targetSize);
+                                    var newSize = CalculateDimensions(image.Size, targetSize);
 
                                     int width = newSize.Width / 2;
                                     int height = newSize.Height / 2;
