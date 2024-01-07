@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0" />
     <ProjectReference Include="..\..\src\PolpAbp.MultiTenancy.EntityFrameworkCore\PolpAbp.MultiTenancy.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\PolpAbp.MultiTenancy.TestBase\PolpAbp.MultiTenancy.TestBase.csproj" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="7.1.0" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="7.2.0" />
   </ItemGroup>
 
 </Project>
