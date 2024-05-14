@@ -29,7 +29,7 @@ namespace PolpAbp.ResourceManagement.Services
             _options = options.Value;
         }
 
-        public async Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, CancellationToken cancellationToken)
+        public async Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, bool withBreakdown, CancellationToken cancellationToken)
         {
             // Next 
             var query = await _subscriptionRepository.WithDetailsAsync();
@@ -52,43 +52,50 @@ namespace PolpAbp.ResourceManagement.Services
                 y.CurrentBillingStartDate = u.Item1;
                 y.CurrentBillingEndDate = u.Item2;
 
-                // Breakdows 
-                y.Breakdowns = elem.Plan.Breakdowns.Select(l =>
-                {
-                    var m = ObjectMapper.Map<PlanBreakdown, PlanBreakdownOutputDto>(l);
-                    return m;
-                }).ToList();
 
-                y.CategoryQuotas = elem.Plan.CategoryQuotas.Select(l =>
+                if (withBreakdown)
                 {
-                    var m = ObjectMapper.Map<PlanCategoryQuota, PlanCategoryQuotaOutputDto>(l);
-                    return m;
-                }).ToList();
+                    // Breakdows 
+                    y.Breakdowns = elem.Plan.Breakdowns.Select(l =>
+                    {
+                        var m = ObjectMapper.Map<PlanBreakdown, PlanBreakdownOutputDto>(l);
+                        return m;
+                    }).ToList();
+
+                    y.CategoryQuotas = elem.Plan.CategoryQuotas.Select(l =>
+                    {
+                        var m = ObjectMapper.Map<PlanCategoryQuota, PlanCategoryQuotaOutputDto>(l);
+                        return m;
+                    }).ToList();
+                }
 
                 return y;
 
             }).ToList();
 
-            var resourceIds = new List<Guid>();
-            foreach(var x in ret)
+            if (withBreakdown)
             {
-                foreach(var y in x.Breakdowns)
+                var resourceIds = new List<Guid>();
+                foreach (var x in ret)
                 {
-                    resourceIds.Add(y.ResourceId);
-                }
-            }
-            resourceIds = resourceIds.Distinct().ToList();
-            var resources = await _resourceRepository.GetListAsync(a => resourceIds.Contains(a.Id), cancellationToken: cancellationToken);
-            foreach (var x in ret)
-            {
-                foreach (var y in x.Breakdowns)
-                {
-                    var z = resources.FirstOrDefault(w => w.Id == y.ResourceId);
-                    if (z != null)
+                    foreach (var y in x.Breakdowns)
                     {
-                        y.Name = z.Name;
-                        y.Description = z.Description;
-                        y.Category = z.Category;
+                        resourceIds.Add(y.ResourceId);
+                    }
+                }
+                resourceIds = resourceIds.Distinct().ToList();
+                var resources = await _resourceRepository.GetListAsync(a => resourceIds.Contains(a.Id), cancellationToken: cancellationToken);
+                foreach (var x in ret)
+                {
+                    foreach (var y in x.Breakdowns)
+                    {
+                        var z = resources.FirstOrDefault(w => w.Id == y.ResourceId);
+                        if (z != null)
+                        {
+                            y.Name = z.Name;
+                            y.Description = z.Description;
+                            y.Category = z.Category;
+                        }
                     }
                 }
             }

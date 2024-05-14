@@ -15,9 +15,10 @@ namespace PolpAbp.ResourceManagement.Services
         /// Computes the effective plans for now or any future time
         /// </summary>
         /// <param name="referenceTime">The reference time when the plans will be effective</param>
+        /// <param name="withBreakdown">A flag to include the breakdown detail or not.</param>
         /// <param name="cancellationToken">Token</param>
         /// <returns>List of plans</returns>
-        Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, CancellationToken cancellationToken);
+        Task<List<SubscriptionPlanOutputDto>> LoadEffectivePlansAsync(DateTime referenceTime, bool withBreakdown, CancellationToken cancellationToken);
         Task UpdateSubscriptionsAsync(List<SubscriptionPlanInputDto> input, CancellationToken cancellationToken);
         Task CancelSubscriptionsAsync(DateTime cancelledOn, CancellationToken cancellationToken);
     }
