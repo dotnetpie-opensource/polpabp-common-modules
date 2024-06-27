@@ -55,7 +55,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.AddressMaps, (entity) =>
             {
-                var candidates = entity.AddressMaps.Where(b => mapIds.Contains(b.Id));
+                var candidates = entity.AddressMaps.Where(b => mapIds.Contains(b.Id)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.AddressMaps.Remove(c);
@@ -67,7 +67,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.AddressMaps, (entity) =>
             {
-                var candidates = entity.AddressMaps.Where(b => addressIds.Contains(b.AddressId));
+                var candidates = entity.AddressMaps.Where(b => addressIds.Contains(b.AddressId)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.AddressMaps.Remove(c);
@@ -97,7 +97,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
-                var candidates = entity.ContactMaps.Where(b => mapIds.Contains(b.Id));
+                var candidates = entity.ContactMaps.Where(b => mapIds.Contains(b.Id)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.ContactMaps.Remove(c);
@@ -109,7 +109,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.ContactMaps, (entity) =>
             {
-                var candidates = entity.ContactMaps.Where(b => contactIds.Contains(b.ContactId));
+                var candidates = entity.ContactMaps.Where(b => contactIds.Contains(b.ContactId)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.ContactMaps.Remove(c);
@@ -139,7 +139,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.PictureMaps, (entity) =>
             {
-                var candidates = entity.PictureMaps.Where(b => mapIds.Contains(b.Id));
+                var candidates = entity.PictureMaps.Where(b => mapIds.Contains(b.Id)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.PictureMaps.Remove(c);
@@ -151,7 +151,7 @@ namespace PolpAbp.MultiTenancy.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(addOnId, a => a.PictureMaps, (entity) =>
             {
-                var candidates = entity.PictureMaps.Where(b => pictureIds.Contains(b.PictureId));
+                var candidates = entity.PictureMaps.Where(b => pictureIds.Contains(b.PictureId)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.PictureMaps.Remove(c);
