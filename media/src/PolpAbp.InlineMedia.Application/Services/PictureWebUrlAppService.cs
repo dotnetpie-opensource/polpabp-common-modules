@@ -52,7 +52,9 @@ namespace PolpAbp.InlineMedia.Services
                     ? $"{picture.Id}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id}_{targetSize}.{lastPart}";
             }
-            var thumbFilePath = GetThumbLocalPath(relativePath, thumbFileName);
+
+            // The file name could be case sensitive, so normalize it.
+            var thumbFilePath = GetThumbLocalPath(relativePath, thumbFileName.ToLower());
 
             //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
