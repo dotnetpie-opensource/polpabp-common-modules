@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\..\..\common.props" />
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RootNamespace>PolpAbp.MessageTemplates</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Volo.Abp.Ddd.Domain" Version="8.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\PolpAbp.MessageTemplates.Domain.Shared\PolpAbp.MessageTemplates.Domain.Shared.csproj" />
+	</ItemGroup>
+
+</Project>
