@@ -33,7 +33,7 @@ namespace PolpAbp.Directory.EntityFrameworkCore
         {
             await AddOrRemoveChildItemsAsync(countryId, a => a.StateProvinces, (entity) =>
             {
-                var candidates = entity.StateProvinces.Where(b => stateProvinceIds.Contains(b.Id));
+                var candidates = entity.StateProvinces.Where(b => stateProvinceIds.Contains(b.Id)).ToList();
                 foreach (var c in candidates)
                 {
                     entity.StateProvinces.Remove(c);
